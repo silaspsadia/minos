@@ -6,7 +6,9 @@
 #include <kernel/tty.h>
 
 #include "vga.h"
+#include "idtc.h"
 #include "io.h"
+#include "kb.h"
 
 static const uint16_t FB_COMMAND_PORT = 0x3D4;
 static const uint16_t FB_DATA_PORT = 0x3D5;
@@ -29,6 +31,11 @@ void set_cursor(unsigned short pos) {
 	outb(FB_DATA_PORT, (pos >> 8) & 0x00FF);
 	outb(FB_COMMAND_PORT, FB_LOW_BYTE_COMMAND);
 	outb(FB_DATA_PORT, pos & 0x00FF);
+}
+
+void kb_init(void) {
+	/* 0xFD is 11111101 - enables only IRQ1 (keyboard)*/
+	outb(0x21 , 0xFD);
 }
 
 void terminal_initialize(void) {
@@ -100,4 +107,22 @@ void terminal_centerwrite(const char* data) {
 	terminal_row++;
 	terminal_column = VGA_WIDTH_CENTER - adjust; 
 	terminal_writestring(data);
+}
+
+void keyboard_handler_main(void) {
+	terminal_writestring("WOWWOWOWOWOWOWOWWOW\n");
+	unsigned char status;
+	char keycode;
+
+	/* write EOI */
+	outb(0x20, 0x20);
+
+	status = inb(KEYBOARD_STATUS_PORT);
+	/* Lowest bit of status will be set if buffer is not empty */
+	if (status & 0x01) {
+		keycode = inb(KEYBOARD_DATA_PORT);
+		if(keycode < 0)
+			return;
+		terminal_putchar(keyboard_map[(unsigned char) keycode]);
+	}
 }
