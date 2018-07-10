@@ -19,6 +19,7 @@ LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
 ARCHDIR=arch/$(HOSTARCH)
+DEVICEDIR=devices
 
 include $(ARCHDIR)/make.config
 
@@ -32,18 +33,14 @@ $(KERNEL_ARCH_OBJS) \
 kernel/kernel.o \
 
 OBJS=\
-$(ARCHDIR)/io.o \
-$(ARCHDIR)/idt.o \
+$(KERNEL_OBJS) \
 $(ARCHDIR)/crti.o \
 $(ARCHDIR)/crtbegin.o \
 $(KERNEL_OBJS) \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
-$(ARCHDIR)/idtc.o \
 
 LINK_LIST=\
-$(ARCHDIR)/io.o \
-$(ARCHDIR)/idt.o \
 $(LDFLAGS) \
 $(ARCHDIR)/crti.o \
 $(ARCHDIR)/crtbegin.o \
@@ -51,7 +48,6 @@ $(KERNEL_OBJS) \
 $(LIBS) \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
-$(ARCHDIR)/idtc.o \
 
 .PHONY: all clean install install-headers install-kernel
 .SUFFIXES: .o .c .S
