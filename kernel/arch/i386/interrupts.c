@@ -23,13 +23,15 @@ bool register_interrupt_handler(
 }
 
 void fault_handler(struct regs *r) {
+  if (!r)
+    return;
   printf("System Exception. System Halted!\n");
   for (;;);
 }
 
-void irq_handler(struct regs *r) {
+void irq_handler(struct regs* r) {
   // Blank function pointer
-  void (*handler)(struct regs * r);
+  void (*handler)(struct regs* r);
 
   // If there's a custom handler to handle the IRQ, handle it
   handler = interrupt_handlers[r->idt_index];

@@ -105,7 +105,6 @@ void terminal_scrolldown(void) {
 	terminal_row = VGA_HEIGHT - 1;
 	set_cursor(terminal_column, terminal_row);
 	for (size_t x = 0; x < VGA_WIDTH; x++) {
-    	const size_t index = (VGA_HEIGHT - 1) * VGA_WIDTH + x;
   		terminal_putentryat(' ', terminal_color, x, terminal_row);
 	}
 }

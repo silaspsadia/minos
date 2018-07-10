@@ -5,7 +5,7 @@
 
 #define GDT_NUM_ENTRIES 3
 
-extern gdt_load_and_set(uint32_t addr);
+extern void gdt_load_and_set(uint32_t addr);
 void gdt_init(void);
 
 #endif /* GDT_H */
