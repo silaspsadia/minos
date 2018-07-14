@@ -5,6 +5,7 @@
 #include <../arch/i386/idt.h>
 #include <../arch/i386/gdt.h>
 #include <../arch/i386/kb.h>
+#include <../arch/i386/paging.h>
 
 void kernel_welcome(void) {
 	terminal_centerwrite("~*~*~*~*~*~*~*~*~*~*~\n");

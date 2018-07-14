@@ -8,6 +8,8 @@
 #define DATA_RW_TYPE_ACCESS	0x92
 #define STANDARD_GRAN		0xCF
 
+extern void gdt_load_and_set(uint32_t addr);
+
 struct gdt_entry {
 	uint16_t limit_low;		/* 16 bits of the limit; lowest bits */ 
 	uint16_t base_low;		/* 16 bits of the base; lowest bits */
