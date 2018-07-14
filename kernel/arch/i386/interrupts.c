@@ -1,6 +1,6 @@
-#include "idt.h"
-#include "interrupts.h"
-#include "io.h"
+#include <arch/i386/idt.h>
+#include <arch/i386/interrupts.h>
+#include <arch/i386/io.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>

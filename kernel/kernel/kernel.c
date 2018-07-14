@@ -1,11 +1,10 @@
 #include <stdio.h>
 
 #include <kernel/tty.h>
-#include <../arch/i386/io.h>
-#include <../arch/i386/idt.h>
-#include <../arch/i386/gdt.h>
-#include <../arch/i386/kb.h>
-#include <../arch/i386/paging.h>
+#include <arch/i386/io.h>
+#include <arch/i386/idt.h>
+#include <arch/i386/gdt.h>
+#include <arch/i386/kb.h>
 
 void kernel_welcome(void) {
 	terminal_centerwrite("~*~*~*~*~*~*~*~*~*~*~\n");

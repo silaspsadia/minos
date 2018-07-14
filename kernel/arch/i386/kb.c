@@ -1,8 +1,8 @@
-#include "idt.h"
-#include "interrupts.h"
-#include "kernel/tty.h"
-#include "io.h"
-#include "kb.h"
+#include <arch/i386/idt.h>
+#include <arch/i386/interrupts.h>
+#include <kernel/tty.h>
+#include <arch/i386/io.h>
+#include <arch/i386/kb.h>
 #include <stdio.h>
 
 struct kb_state {

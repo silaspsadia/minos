@@ -5,8 +5,8 @@
 
 #include <kernel/tty.h>
 
-#include "vga.h"
-#include "io.h"
+#include <arch/i386/vga.h>
+#include <arch/i386/io.h>
 
 static const uint16_t FB_COMMAND_PORT = 0x3D4;
 static const uint16_t FB_DATA_PORT = 0x3D5;
@@ -37,7 +37,7 @@ void set_cursor(unsigned short x, unsigned short y) {
 void terminal_initialize(void) {
 	terminal_row = 0;
 	terminal_column = 0;
-	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+	terminal_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_CYAN);
 	terminal_buffer = VGA_MEMORY;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
 		for (size_t x = 0; x < VGA_WIDTH; x++) {
