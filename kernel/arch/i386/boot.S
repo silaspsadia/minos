@@ -24,6 +24,7 @@ stack_top:
 .global _start
 .type _start, @function
 _start:
+	invlpg (0)
 	movl $stack_top, %esp
 
 	# Call kernel setup before global constructors
