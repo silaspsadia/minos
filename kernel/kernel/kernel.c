@@ -2,11 +2,11 @@
 
 #include <extern/multiboot.h>
 #include <kernel/tty.h>
-#include <libkern/pmem.h>
 #include <arch/i386/io.h>
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
 #include <arch/i386/kb.h>
+#include <libkern/pmem.h>
 
 void kernel_welcome(void) {
 	terminal_centerwrite("~*~*~*~*~*~*~*~*~*~*~\n");
