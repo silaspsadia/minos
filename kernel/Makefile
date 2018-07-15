@@ -36,10 +36,10 @@ kernel/kernel.o \
 
 OBJS=\
 $(KERNEL_OBJS) \
-$(LIBKERN_OBJS) \
 $(ARCHDIR)/crti.o \
 $(ARCHDIR)/crtbegin.o \
 $(KERNEL_OBJS) \
+$(LIBKERN_OBJS) \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
 

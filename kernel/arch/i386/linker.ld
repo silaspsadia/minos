@@ -8,7 +8,9 @@ SECTIONS
 {
 	/* Begin putting sections at 3 GiB + 1 MiB to mak e a higher-half kernel */
 	. = 0xC0100000;
-
+	kernel_vmem_start = .;
+	kernel_pmem_start = . - 0xC0000000;	
+	
 	/* First put the multiboot header, as it is required to be put very early
 	   early in the image or the bootloader won't recognize the file format.
 	   Next we'll put the .text section. */
@@ -40,6 +42,9 @@ SECTIONS
 		*(.bss)
 		. = ALIGN(4K);
 	}
+
+	kernel_vmem_end = .;
+	kernel_pmem_end = . - 0xC0000000;
 
 	/* The compiler may produce other sections, put them in the proper place in
 	   in this file, if you'd like to include them in the final kernel. */
