@@ -37,7 +37,7 @@ void alloc_chunk(uint32_t base_addr, int len) {
 	int num_blocks = len / PMEM_BLOCK_SIZE;
 	while (num_blocks-- >= 0) {
 		mmap_set(cur_block++);
-		_pmem_used_blocks--;
+		_pmem_used_blocks++;
 	}
 }
 
@@ -96,12 +96,12 @@ void pmem_init(struct multiboot_info *mb) {
 	printf("[Mem ] Freeing available memory successful.\n");
 	
 	/* Allocate memory for use by the kernel */
-	alloc_chunk(KERNEL_START_PADDR, KERNEL_SIZE*KERNEL_SIZE);
+	alloc_chunk(KERNEL_START_PADDR, KERNEL_SIZE);
 	printf("[Mem ] Allocating kernel memory successful. Total blocks: %i.\n", _pmem_total_blocks);	
-
+	
+	alloc_chunk(*_pmem_memory_map, _pmem_total_blocks);
 	kernel_phys_map_start = (uint32_t)_pmem_memory_map;
 	kernel_phys_map_end = kernel_phys_map_start + (_pmem_total_blocks / PMEM_BLOCKS_PER_BYTE);
-	alloc_chunk(KERNEL_START_PADDR, KERNEL_SIZE);
 	printf("[Mem ] PMEM manager installed successfully.\n");
-	printf("[Mem ] PMEM initialized with %i KB using address range [%x, %x].\n", _pmem_size_kb, kernel_phys_map_start, kernel_phys_map_end);
+	printf("[Mem ] PMEM map (managing %i KB) stored in [%x, %x].\n", _pmem_size_kb, kernel_phys_map_start, kernel_phys_map_end);
 }

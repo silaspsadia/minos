@@ -26,12 +26,29 @@ enum PAGE_PTE_FLAGS {
 	I86_PTE_FRAME = 0x7FFFF000
 };
 
-inline void		pte_add_attrib (pte *entry, uint32_t attrib);
-inline void		pte_del_attrib (pte *entry, uint32_t attrib);
-inline void		pte_set_frame (pte *entry, paddr addr);
-inline int		pte_is_present (pte entry);
-inline int		pte_is_writable (pte entry);
-inline paddr	pde_entry_frame (pte entry);
+inline void		pte_add_attrib (pte *entry, uint32_t attrib) {
+	*entry |= attrib;
+}
+
+inline void		pte_del_attrib (pte *entry, uint32_t attrib) {
+	*entry &= ~attrib;
+}
+
+inline void		pte_set_frame (pte *entry, paddr addr) {
+	*entry = (*entry &= ~I86_PTE_FRAME) | addr;
+}
+
+inline int		pte_is_present (pte entry) {
+	return entry & I86_PTE_PRESENT;
+}
+
+inline int		pte_is_writable (pte entry) {
+	return entry & I86_PTE_WRITABLE;
+}
+
+inline paddr	pde_entry_frame (pte entry) {
+	return entry & I86_ENTRY_FRAME;
+}
 
 enum PAGE_PDE_FLAGS {
 	I86_PDE_PRESENT = 1,
@@ -47,14 +64,40 @@ enum PAGE_PDE_FLAGS {
 	I86_PDE_FRAME = 0x7FFFF000
 };
 
-inline void		pde_add_attrib (pde *entry, uint32_t attrib);
-inline void		pde_del_attrib (pde *entry, uint32_t attrib);
-inline void		pde_set_frame (pde *entry, paddr addr);
-inline int		pde_is_present (pde entry);
-inline int		pde_is_user (pde entry);
-inline int		pde_is_4mb (pde entry);
-inline int		pde_is_writable (pde entry);
-inline paddr	pde_entry_frame (pde entry);
-inline void		pde_enable_global (pde entry);
+inline void		pde_add_attrib (pde *entry, uint32_t attrib) {
+	*entry |= attrib;
+}
+
+inline void		pde_del_attrib (pde *entry, uint32_t attrib) {
+	*entry &= ~attrib;
+}
+
+inline void		pde_set_frame (pde *entry, paddr addr) {
+	*entry = (*entry &= ~I86_PDE_FRAME) | addr;
+}
+
+inline int		pde_is_present (pde entry) {
+	return entry & I86_PDE_PRESENT;
+}
+
+inline int		pde_is_user (pde entry) {
+	return entry & I86_PDE_USER;
+}
+
+inline int		pde_is_4mb (pde entry) {	
+	return entry & I86_PDE_4MB;
+}
+
+inline int		pde_is_writable (pde entry) {
+	return entry & I86_PDE_WRITABLE;
+}
+
+inline paddr	pde_entry_frame (pde entry) {
+	return entry & I86_PDE_FRAME;
+}
+
+inline void		pde_enable_global (pde entry) {
+	*entry |= CPU_GLOBAL;
+}
 
 #endif /* PAGING_H */
