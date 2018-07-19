@@ -109,7 +109,7 @@ void virt_memory_init() {
 
 	// Create default directory table
 	cur_directory = (page_directory*)alloc_blocks(3);
-	printf("%i\n", (int) cur_directory);
+	printf("[Mem ] Cur directory table installed at %x\n", (uint32_t) cur_directory);
 	if (!cur_directory) 
 		return;
 
@@ -129,5 +129,5 @@ void virt_memory_init() {
 
 	// Updates the Phys Mem table to its new virtual address
 	update_map_addr(KERNEL_END_VADDR);
-	printf("Paging installed.\n");
+	printf("[Mem ] Paging installed.\n");
 }
