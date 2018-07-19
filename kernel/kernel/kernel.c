@@ -6,7 +6,8 @@
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
 #include <arch/i386/kb.h>
-#include <libkern/pmem.h>
+#include <libkern/phys_mem.h>
+#include <libkern/virt_mem.h>
 
 void kernel_welcome(void) {
 	terminal_centerwrite("~*~*~*~*~*~*~*~*~*~*~\n");
@@ -17,10 +18,10 @@ void kernel_welcome(void) {
 void kernel_init(struct multiboot_info *mb) {
 	terminal_initialize();
 	kernel_welcome();
-
 	gdt_init();
 	idt_init();
-	pmem_init(mb);
+	phys_memory_init(mb);
+	virt_memory_init();
 	kb_init();
 	asm(" sti ");
 }
