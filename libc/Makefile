@@ -29,6 +29,9 @@ LIBK_CPPFLAGS:=$(LIBK_CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 
 FREEOBJS=\
 $(ARCH_FREEOBJS) \
+math/div_ceil.o \
+math/maxu.o \
+math/minu.o \
 stdio/printf.o \
 stdio/putchar.o \
 stdio/puts.o \

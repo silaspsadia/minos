@@ -6,6 +6,7 @@
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
 #include <arch/i386/kb.h>
+#include <libkern/heap.h>
 #include <libkern/phys_mem.h>
 #include <libkern/virt_mem.h>
 
@@ -22,6 +23,7 @@ void kernel_init(struct multiboot_info *mb) {
 	idt_init();
 	phys_memory_init(mb);
 	virt_memory_init();
+	kernel_heap_init();
 	kb_init();
 	asm(" sti ");
 }
