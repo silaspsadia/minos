@@ -9,15 +9,9 @@ void bap_test(void) {
 	sll_push_back(s, 9);
 	sll_push_back(s, 8);
 	sll_push_back(s, 7);
-	sll_push_back(s, 6);
-	sll_push_back(s, 5);
-	sll_push_back(s, 4);
-	sll_push_back(s, 3);
-	sll_push_back(s, 2);
-	sll_push_back(s, 1);
-	sll_swap(s, 3, 2);
-	sll_swap(s, 3, 4);
-	sll_swap(s, 0, 5);
-	sll_swap(s, 2, 1);
+	for (int i = 0; i < 100; i++) {
+		int *place = kmalloc(sizeof(int) * 100);
+		printf("[%x]\n", place);		
+	}
 	sll_print(s);
 }

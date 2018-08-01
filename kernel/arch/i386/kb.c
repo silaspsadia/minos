@@ -1,9 +1,9 @@
 #include <arch/i386/idt.h>
 #include <arch/i386/interrupts.h>
-#include <kernel/tty.h>
 #include <arch/i386/io.h>
 #include <arch/i386/kb.h>
-#include <stdio.h>
+#include <arch/i386/vga.h>
+#include <kernel/tty.h>
 
 struct kb_state {
   int caps_lock;
@@ -149,5 +149,6 @@ void kb_init() {
   register_interrupt_handler(KEYBOARD_IDT_INDEX, keyboard_handler);
   state.caps_lock = 0;
   state.shift_held = 0;
-  printf("[Init] Keyboard installed successfully.\n");
+  terminal_writestring("[Init] Installing keyboard... ");
+  terminal_colorprint("done.\n", VGA_COLOR_GREEN);
 }

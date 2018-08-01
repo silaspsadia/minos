@@ -1,6 +1,7 @@
 #include <arch/i386/idt.h>
 #include <arch/i386/io.h>
-#include <stdio.h>
+#include <arch/i386/vga.h>
+#include <kernel/tty.h>
 #include <string.h>
 
 #define SET_IDT_ENTRY(idx) \
@@ -143,5 +144,6 @@ void idt_init() {
 
   // Points the processor's internal register to the new IDT
   idt_load(&idtp);
-  printf("[Init] IDT set up successfully.\n");
+  terminal_writestring("[Init] Setting up IDT... ");
+  terminal_colorprint("done.\n", VGA_COLOR_GREEN);  
 }

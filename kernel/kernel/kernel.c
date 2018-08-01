@@ -26,7 +26,6 @@ void kernel_init(struct multiboot_info *mb) {
 	virt_memory_init();
 	kernel_heap_init();
 	kb_init();
-	bap_test();
 	asm(" sti ");
 }
 

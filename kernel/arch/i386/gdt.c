@@ -1,5 +1,6 @@
 #include <arch/i386/gdt.h>
-#include <stdio.h>
+#include <arch/i386/vga.h>
+#include <kernel/tty.h>
 #include <stdint.h>
 
 #define SEGMENT_BASE		0x00000
@@ -65,5 +66,6 @@ void gdt_init(void) {
 	/* gdt[2] : Data Segment  Descriptor */
 	gdt_setgate(2, SEGMENT_BASE, SEGMENT_LIMIT, DATA_RW_TYPE_ACCESS, STANDARD_GRAN);
 	gdt_load_and_set((uint32_t) &gdtp);
-	printf("[Init] GDT set up successfully.\n");
+	terminal_writestring("[Init] Setting up GDT... ");
+	terminal_colorprint("done.\n", VGA_COLOR_GREEN); 
 } 

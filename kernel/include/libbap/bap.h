@@ -62,6 +62,7 @@ int sll_push_back(sll_t *list, int entry) {
 		cur->second = (int) to; 	
 	}
 	// Increment the first field of the metadata bap (length)
+	printf("[%x] %i\n", to, entry);
 	(list->metadata).first++;
 	return 0;
 }
