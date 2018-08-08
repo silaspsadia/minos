@@ -61,8 +61,31 @@ void *kmalloc(size_t nbytes) {
 	}
 }
 
-void kfree(void *p) {
-	
+void kfree(void *ap) {
+	header_t *bp, *p;
+	bp = (header_t *) ap - 1;
+	for (p = _flist; !(bp > p && bp < p->next); p = p->next) {
+		if (p >= p->next && (bp > p || bp < p->next)) {
+			/* freed block at start of end of arena */
+			break;
+		}
+	}
+	if (bp + bp->size == p->next) {
+ 		/* join to upper nbr */
+		bp->size += p->next->size;
+		bp->next = p->next->next;
+	} else {
+		bp->next = p->next;
+	}
+
+	if (p + p->size == bp) {
+		/* join to lower nbr */
+		p->size += bp->size;
+		p->next = bp->next;
+	} else {
+		p->next = bp;
+	}
+	print_flist(_flist);
 }
 
 void *acquire_more_heap(size_t nunits) {
