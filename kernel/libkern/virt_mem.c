@@ -1,4 +1,4 @@
-#include <libkern/paging.h>
+#include <libkern/constants.h>
 #include <libkern/phys_mem.h>
 #include <libkern/virt_mem.h>
 #include <stdio.h>
@@ -9,6 +9,19 @@ bool alloc_page(virtual_addr vaddr) {
 	if (!paddr) 
 		return false;
 	map_page(paddr, vaddr);
+	return true;
+}
+
+bool alloc_pages(virtual_addr vaddr, size_t count) {
+	int offset;
+	physical_addr paddr = alloc_blocks(count);
+	if (!paddr)
+		return false;
+	for (int i = 0; i < count; i++) {
+		offset = i * FOUR_KB;
+		printf("[VMEM] Allocating at vaddr %x\n", vaddr + offset);
+		map_page(paddr + offset, vaddr + offset);
+	}
 	return true;
 }
 
@@ -95,7 +108,7 @@ void virt_memory_init() {
 		pt_entry_add_attrib(&page, I86_PTE_PRESENT);
 		pt_entry_set_frame(&page, frame);
 		table->m_entries[PAGE_TABLE_INDEX(virt)] = page;
-  }
+	}
 
 	// Maps kernel pages and phys mem pages
 	for (uint32_t frame = KERNEL_START_PADDR, virt = KERNEL_START_VADDR;
