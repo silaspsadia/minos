@@ -48,7 +48,7 @@ void *kmalloc(size_t nbytes) {
 				cur->size = nunits;
 			}
 			_flist = prev;
-			return (void *) cur;
+			return (void *) (cur + 1);
 		} 
 		if (cur == _flist) {
 			if ((cur = acquire_more_heap(nunits)) == NULL)
