@@ -16,4 +16,5 @@ void kheap_init(void);
 void *kmalloc(size_t);
 void kfree(void *);
 void *acquire_more_heap(size_t);
+void print_flist(header_t*);
 #endif  // _LIBK_HEAP_

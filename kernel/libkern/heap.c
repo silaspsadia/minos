@@ -44,24 +44,25 @@ void *kmalloc(size_t nbytes) {
 			if (cur->size == nunits) {
 				prev->next = cur->next;
 			} else {
-				cur += cur->size - nunits;
+				cur->size -= nunits;
+				cur += cur->size;
 				cur->size = nunits;
-			}
+			}	
 			_flist = prev;
+			print_flist(_flist);
 			return (void *) (cur + 1);
 		} 
 		if (cur == _flist) {
 			if ((cur = acquire_more_heap(nunits)) == NULL)
 				return NULL;
 			prev->next = cur;
-			cur == prev;
+			cur = prev;
 		}
 	}
-	
 }
 
 void kfree(void *p) {
-	return NULL;
+	
 }
 
 void *acquire_more_heap(size_t nunits) {
@@ -73,15 +74,24 @@ void *acquire_more_heap(size_t nunits) {
 
 	npage_frames = div_ceil(nunits * sizeof(header_t), FOUR_KB);
 	nbytes = npage_frames * FOUR_KB;
-	printf("%n\n", npage_frames);
-	printf("%n\n", nbytes);
+	printf("Page frames needed: %n\n", npage_frames);
+	printf("Total bytes: %n\n", nbytes);
+
 	alloc_pages((virtual_addr *) cur_loc, npage_frames);
+
 	p = (header_t *) cur_loc;
 	p->size = nbytes / sizeof(header_t);
 	p->next = _flist;
+
 	_flist = p;
+	cur_loc += nbytes;
 	return _flist;
 }
 
-
-
+void print_flist(header_t *head) {
+	header_t *cur = head;
+	do {
+		printf("@%x[%n|%x] ", cur, cur->size, cur->next); 
+	} while ((cur = cur->next) != head);
+	printf("\n");
+}

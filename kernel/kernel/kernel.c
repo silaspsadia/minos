@@ -27,6 +27,14 @@ void kernel_init(struct multiboot_info *mb) {
 	kheap_init();
 	kb_init();
 	asm(" sti ");
+
+	int *arr0 = kmalloc(sizeof(int) * 5000);
+	int *arr1 = kmalloc(sizeof(int) * 30000);
+	int *arr2 = kmalloc(sizeof(int) * 3000);
+	
+	printf("Array arr0 of size 5000 at %x\n", arr0);
+	printf("Array arr1 of size 30000 at %x\n", arr1);
+	printf("Array arr2 of size 3000 at %x\n", arr2);
 }
 
 void kernel_main(void) {
