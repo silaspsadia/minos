@@ -49,7 +49,6 @@ void *kmalloc(size_t nbytes) {
 				cur->size = nunits;
 			}	
 			_flist = prev;
-			print_flist(_flist);
 			return (void *) (cur + 1);
 		} 
 		if (cur == _flist) {

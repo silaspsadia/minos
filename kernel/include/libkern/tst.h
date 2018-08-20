@@ -1,3 +1,6 @@
+#ifndef TST_H
+#define TST_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +9,6 @@ typedef struct tst_node_t {
 	struct tst_node_t *left;		
 	struct tst_node_t *mid;		
 	struct tst_node_t *right;
-	int just_made;
 	int key;
 	char prefix;	
 } tst_node;
@@ -21,20 +23,22 @@ void tst_node_insert(tst_node *head, char *word);
 void tst_insert(tst *tree, char *word);
 
 tst *tst_init(void) {
-	tst *ret = malloc(sizeof(tst));
+	tst *ret = kmalloc(sizeof(tst));
 	ret->head = tst_node_init();
 	return ret;
 }
 
 tst_node *tst_node_init(void) {
-	tst_node *ret = calloc(1, sizeof(tst_node));
-	ret->just_made = 1;
+	tst_node *ret = kmalloc(sizeof(tst_node));
+	ret->left = ret->mid = ret->right = NULL;
+	ret->key = 0;
+	ret->prefix = '\0';
 	return ret;
 }
 
 void tst_node_insert(tst_node *head, char *word) {
 	int diff;
-	char *substring = malloc(1000);
+	char *substring = kmalloc(1000);
 	char cur_char = word[0];
 	if (cur_char == '\0') {	
 		head->key++;
@@ -74,7 +78,7 @@ void tst_node_printout(tst_node *head, char *strconstruct) {
 	if (head == NULL)
 		return;
 	int len = strlen(strconstruct);
-	char *strnew = calloc(len + 1, sizeof(char));
+	char *strnew = kmalloc((len + 1) * sizeof(char));
 	strcpy(strnew, strconstruct);
 	strnew[len] = head->prefix;
 	if (head->prefix == '\0') {
@@ -82,7 +86,7 @@ void tst_node_printout(tst_node *head, char *strconstruct) {
 		return;
 	}
 	if (head->key > 0) {
-		char *finish = calloc(len + 1, sizeof(char));
+		char *finish = kmalloc((len + 1) * sizeof(char));
 		strcpy(finish, strconstruct);
 		printf("%s\n", finish);
 	}
@@ -120,3 +124,4 @@ int tst_find(tst *tree, char *word) {
 		return 1;
 	return 0;
 }
+#endif /* TEST_H */

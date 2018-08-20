@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 #include <extern/multiboot.h>
 #include <kernel/tty.h>
 #include <arch/i386/io.h>
@@ -10,6 +9,7 @@
 #include <libkern/heap.h>
 #include <libkern/phys_mem.h>
 #include <libkern/virt_mem.h>
+#include <libkern/tst.h>
 
 void kernel_welcome(void) {
 	terminal_centerwrite("~*~*~*~*~*~*~*~*~*~*~\n");
