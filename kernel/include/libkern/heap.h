@@ -1,5 +1,5 @@
-#ifndef _LIBK_HEAP_
-#define _LIBK_HEAP_
+#ifndef LIBKERN_HEAP_H
+#define LIBKERN_HEAP_H
 
 #include <libkern/memlayout.h>
 #include <libkern/virt_mem.h>
@@ -17,4 +17,5 @@ void *kmalloc(size_t);
 void kfree(void *);
 void *acquire_more_heap(size_t);
 void print_flist(header_t*);
-#endif  // _LIBK_HEAP_
+
+#endif  // LIBKERN_HEAP_H

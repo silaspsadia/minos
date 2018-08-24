@@ -1,5 +1,5 @@
-#ifndef TST_H
-#define TST_H
+#ifndef LIBKERN_TST_H
+#define LIBKERN_TST_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -124,4 +124,5 @@ int tst_find(tst *tree, char *word) {
 		return 1;
 	return 0;
 }
-#endif /* TEST_H */
+
+#endif /* LIBKERN_TST_H */

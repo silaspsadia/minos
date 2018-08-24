@@ -1,3 +1,6 @@
+#ifndef LIBKERN_HTABLE_H
+#define LIBKERN_HTABLE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -74,3 +77,5 @@ void htable_printout(struct htable *ht) {
 		printf("[\\]\n");
 	}
 }
+
+#endif /* LIBKERN_HTABLE_H */

@@ -30,5 +30,5 @@ inline void invlpg(void* m) {
 inline void flush_tlb_entry(vaddr addr) { 
 	invlpg((void*) addr); 
 }
-#endif /* VMEM_H */
 
+#endif /* VMEM_H */

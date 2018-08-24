@@ -1,3 +1,6 @@
+#ifndef LIBKERN_LIST_H
+#define LIBKERN_LIST_H
+
 #include <stddef.h>
 
 struct list_head {
@@ -53,3 +56,5 @@ static inline int list_is_empty(struct list_head *head)
 {
 	return head->next == head;
 }
+
+#endif /* LIBKERN_LIST_H */

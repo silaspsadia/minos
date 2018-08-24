@@ -1,5 +1,5 @@
-#ifndef _LIBK_KPAGING_H_
-#define _LIBK_KPAGING_H_
+#ifndef LIBKERN_PAGING_H
+#define LIBKERN_PAGING_H
 
 #include <libkern/memlayout.h>
 #include <stdbool.h>
@@ -97,4 +97,4 @@ inline void pd_entry_enable_global(pd_entry entry) {
   // TODO(psamora) Figure this out
 }
 
-#endif  // _LIBK_KPAGING_H_
+#endif  // LIBKERN_PAGING_H

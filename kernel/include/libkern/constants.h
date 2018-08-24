@@ -1,6 +1,6 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef LIBKERN_CONSTANTS_H
+#define LIBKERN_CONSTANTS_H
 
 #define FOUR_KB 4096
 
-#endif
+#endif /* LIBKERN_CONSTANTS_H */
