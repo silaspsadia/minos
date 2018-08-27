@@ -30,9 +30,7 @@ tst *tst_init(void) {
 
 tst_node *tst_node_init(void) {
 	tst_node *ret = kmalloc(sizeof(tst_node));
-	ret->left = ret->mid = ret->right = NULL;
-	ret->key = 0;
-	ret->prefix = '\0';
+	memset(ret, 0, sizeof(tst_node));
 	return ret;
 }
 
