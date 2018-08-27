@@ -89,13 +89,13 @@ void kfree(void *ap) {
 
 void *acquire_more_heap(size_t nunits) {
 	size_t nbytes, npage_frames;		
-	header_t *p;
-
+	header_t *p, *save;
+	
 	if (nunits < MIN_BLOCK_SIZE) 
 		nunits = MIN_BLOCK_SIZE;
-
 	npage_frames = div_ceil(nunits * sizeof(header_t), FOUR_KB);
 	nbytes = npage_frames * FOUR_KB;
+	
 	printf("Page frames needed: %n\n", npage_frames);
 	printf("Total bytes: %n\n", nbytes);
 
@@ -103,11 +103,11 @@ void *acquire_more_heap(size_t nunits) {
 
 	p = (header_t *) cur_loc;
 	p->size = nbytes / sizeof(header_t);
-	p->next = _flist;
+	p->next = _flist->next;
 
-	_flist = p;
+	_flist->next = p;
 	cur_loc += nbytes;
-	return _flist;
+	return p;
 }
 
 void print_flist(header_t *head) {

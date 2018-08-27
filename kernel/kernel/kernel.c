@@ -5,7 +5,7 @@
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
 #include <arch/i386/kb.h>
-#include <libbap/bap_test.h>
+#include <arch/i386/timer.h>
 #include <libkern/heap.h>
 #include <libkern/phys_mem.h>
 #include <libkern/virt_mem.h>
@@ -39,6 +39,7 @@ void kernel_init(struct multiboot_info *mb) {
 	printf("%i\n", tst_find(tst0, "sin"));
 	printf("%i\n", tst_find(tst0, "of"));
 	printf("%i\n", tst_find(tst0, "o"));
+	timer_init();
 	asm(" sti ");
 }
 

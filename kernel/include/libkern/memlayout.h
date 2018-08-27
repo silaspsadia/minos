@@ -1,5 +1,5 @@
-#ifndef _LIBK_MEMLAYOUT_
-#define _LIBK_MEMLAYOUT_
+#ifndef LIBKERN_MEMLAYOUT_H
+#define LIBKERN_MEMLAYOUT_H
 
 #include <stdint.h>
 
@@ -51,4 +51,4 @@ extern uint32_t kernel_phys_map_end;
 typedef uint32_t virtual_addr;
 typedef uint32_t physical_addr;
 
-#endif  // _LIBK_MEMLAYOUT_
+#endif  /* LIBKERN_MEMLAYOUT_H */

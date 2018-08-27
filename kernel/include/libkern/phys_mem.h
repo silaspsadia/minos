@@ -1,5 +1,5 @@
-#ifndef _LIBK_KPHYS_MEM_H_
-#define _LIBK_KPHYS_MEM_H_
+#ifndef LIBKERN_PHYS_MEM_H
+#define LIBKERN_PHYS_MEM_H
 
 #include <libkern/memlayout.h>
 #include <stdbool.h>
@@ -27,4 +27,4 @@ void free_blocks(physical_addr, uint32_t count);
 
 bool is_alloced(physical_addr);
 
-#endif  // _LIBK_KPHYS_MEM_H_
+#endif  /* LIBKERN_PHYS_MEM_H */

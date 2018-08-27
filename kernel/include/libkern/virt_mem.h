@@ -1,5 +1,5 @@
-#ifndef _LIBK_KVIRT_MEM_H_
-#define _LIBK_KVIRT_MEM_H_
+#ifndef LIBKERN_VIRT_MEM_H
+#define LIBKERN_VIRT_MEM_H
 
 #include <asm.h>
 #include <libkern/memlayout.h>
@@ -44,4 +44,4 @@ void virt_memory_init();
 
 inline void flush_tlb_entry(virtual_addr addr) { invlpg((void*)addr); }
 
-#endif  // _LIBK_KVIRT_MEM_H_
+#endif  // LIBKERN_VIRT_MEM_H
