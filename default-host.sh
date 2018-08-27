@@ -1,2 +1,2 @@
 #!/bin/sh
-echo /home/isajisai/opt/cross/bin/i686-elf
+echo /home/silas/opt/cross/bin/i686-elf

@@ -26,6 +26,7 @@ void kernel_init(struct multiboot_info *mb) {
 	virt_memory_init();
 	kheap_init();
 	kb_init();
+	/**
 	tst *tst0 = tst_init();
 	tst_insert(tst0, "sing");
 	tst_insert(tst0, "along");
@@ -39,6 +40,7 @@ void kernel_init(struct multiboot_info *mb) {
 	printf("%i\n", tst_find(tst0, "sin"));
 	printf("%i\n", tst_find(tst0, "of"));
 	printf("%i\n", tst_find(tst0, "o"));
+	**/
 	timer_init();
 	asm(" sti ");
 }

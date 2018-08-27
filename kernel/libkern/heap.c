@@ -13,13 +13,13 @@
 #define MIN_BLOCK_SIZE 1024
 
 static header_t base;
-static header_t *cur_loc;
+static header_t *_wild;
 static header_t *_flist;
 
 void kheap_init(void) {
-	cur_loc = HEAP_VIRT_ADDR_START;
+	_wild = HEAP_VIRT_ADDR_START;
 	_flist = NULL;
-	printf("[Mem ] Heap initialized at %x\n", cur_loc);
+	printf("[Mem ] Heap initialized at %x\n", _wild);
 }
 
 void *kmalloc(size_t nbytes) {
@@ -99,14 +99,14 @@ void *acquire_more_heap(size_t nunits) {
 	printf("Page frames needed: %n\n", npage_frames);
 	printf("Total bytes: %n\n", nbytes);
 
-	alloc_pages((virtual_addr *) cur_loc, npage_frames);
+	alloc_pages((virtual_addr *) _wild, npage_frames);
 
-	p = (header_t *) cur_loc;
+	p = (header_t *) _wild;
 	p->size = nbytes / sizeof(header_t);
 	p->next = _flist->next;
 
 	_flist->next = p;
-	cur_loc += nbytes;
+	_wild += nbytes;
 	return p;
 }
 

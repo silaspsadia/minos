@@ -19,6 +19,8 @@ void timer_phase(int hz)
 void timer_handler(struct regs *r) 
 {
 	_timer_ticks++;
+	if (_timer_ticks % TICKS_PER_SECOND == 0)
+		printf("Time since install: %i s\n", _timer_ticks / TICKS_PER_SECOND);
 }
 
 void timer_init(void)
