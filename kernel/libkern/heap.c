@@ -91,6 +91,13 @@ void kfree(void *ap) {
 	print_flist_head(_flist_head);
 }
 
+void *kcalloc(size_t nmemb, size_t size) {
+	size_t nbytes = nmemb * size;
+	void *p = kmalloc(nbytes);
+	memset(p, 0, nbytes);
+	return p;
+}
+
 void *acquire_more_heap(size_t nunits) {
 	size_t nbytes, npage_frames;		
 	header_t *p, *save;
