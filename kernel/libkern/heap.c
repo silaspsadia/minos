@@ -14,15 +14,16 @@
 
 static header_t base;
 static header_t *_wild;
-static header_t *_flist;
+static header_t *_flist_head;
 
 void kheap_init(void) {
 	_wild = HEAP_VIRT_ADDR_START;
-	_flist = NULL;
+	_flist_head = NULL;
 	printf("[Mem ] Heap initialized at %x\n", _wild);
 }
 
 void *kmalloc(size_t nbytes) {
+	printf("[heap] KMALLOC\n");
 	header_t *cur, *prev;
 	size_t nunits;	
 
@@ -31,13 +32,13 @@ void *kmalloc(size_t nbytes) {
 		return NULL;
 
 	/* If no free list yet, init */
-	if (_flist == NULL) {
-		base.next = _flist = &base;
+	if (_flist_head == NULL) {
+		base.next = _flist_head = &base;
 		base.size = 0;
 	}
 	
 	nunits = div_ceil(nbytes + sizeof(header_t), sizeof(header_t));
-	prev = _flist;
+	prev = _flist_head;
 
 	for (cur = prev->next; ; prev = cur, cur = cur->next) {
 		if (cur->size >= nunits) {
@@ -48,10 +49,10 @@ void *kmalloc(size_t nbytes) {
 				cur += cur->size;
 				cur->size = nunits;
 			}	
-			_flist = prev;
+			print_flist_head(_flist_head);	
 			return (void *) (cur + 1);
 		} 
-		if (cur == _flist) {
+		if (cur == _flist_head) {
 			if ((cur = acquire_more_heap(nunits)) == NULL)
 				return NULL;
 			prev->next = cur;
@@ -61,30 +62,33 @@ void *kmalloc(size_t nbytes) {
 }
 
 void kfree(void *ap) {
-	header_t *bp, *p;
+	printf("[heap] KFREE\n");
+	header_t *bp, *p, *p_prev, *start;
 	bp = (header_t *) ap - 1;
-	for (p = _flist; !(bp > p && bp < p->next); p = p->next) {
-		if (p >= p->next && (bp > p || bp < p->next)) {
-			/* freed block at start of end of arena */
-			break;
-		}
-	}
-	if (bp + bp->size == p->next) {
- 		/* join to upper nbr */
-		bp->size += p->next->size;
-		bp->next = p->next->next;
-	} else {
-		bp->next = p->next;
-	}
+	for (p_prev = NULL, p = _flist_head; !(bp < p && bp > p->next); p_prev = p, p = p->next)
+		if (p_prev == NULL)
+			start = _flist_head;
+		else 
+			if (p == start)
+				break;
 
-	if (p + p->size == bp) {
-		/* join to lower nbr */
-		p->size += bp->size;
-		p->next = bp->next;
+	if (bp + bp->size == p) {
+ 		/* merge with upper boundary; original p data left free */
+		bp->size += p->size;
+		bp->next = p->next;
+		p_prev->next = bp;
 	} else {
+		bp->next = p->next; 
 		p->next = bp;
 	}
-	print_flist(_flist);
+
+	if (bp->next + bp->next->size == bp) {
+		/* merge with lower boundary; original bp data left free */
+		if (bp->next == start) 
+			start->next = start;
+		bp->next->size += bp->size;
+	}
+	print_flist_head(_flist_head);
 }
 
 void *acquire_more_heap(size_t nunits) {
@@ -103,14 +107,20 @@ void *acquire_more_heap(size_t nunits) {
 
 	p = (header_t *) _wild;
 	p->size = nbytes / sizeof(header_t);
-	p->next = _flist->next;
+	p->next = _flist_head->next;
 
-	_flist->next = p;
+	if (_flist_head->next = _flist_head) {
+		_flist_head = p;	
+		p->next = p;
+	} else { 
+		_flist_head->next = p;
+	}
 	_wild += nbytes;
 	return p;
 }
 
-void print_flist(header_t *head) {
+void print_flist_head(header_t *head) {
+	printf("[heap] PRINTING: ");
 	header_t *cur = head;
 	do {
 		printf("@%x[%n|%x] ", cur, cur->size, cur->next); 

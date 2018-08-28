@@ -26,21 +26,6 @@ void kernel_init(struct multiboot_info *mb) {
 	virt_memory_init();
 	kheap_init();
 	kb_init();
-	/**
-	tst *tst0 = tst_init();
-	tst_insert(tst0, "sing");
-	tst_insert(tst0, "along");
-	tst_insert(tst0, "to");
-	tst_insert(tst0, "the");
-	tst_insert(tst0, "sound");
-	tst_insert(tst0, "of");
-	tst_insert(tst0, "music");
-	tst_printout(tst0);
-	printf("%i\n", tst_find(tst0, "sing"));
-	printf("%i\n", tst_find(tst0, "sin"));
-	printf("%i\n", tst_find(tst0, "of"));
-	printf("%i\n", tst_find(tst0, "o"));
-	**/
 	timer_init();
 	asm(" sti ");
 }
