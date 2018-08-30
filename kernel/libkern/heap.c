@@ -7,6 +7,7 @@
 #include <libkern/constants.h>
 #include <libkern/memlayout.h>
 #include <libkern/phys_mem.h>
+#include <libkern/poison.h>
 #include <libkern/virt_mem.h>
 #include <libkern/heap.h>
 
@@ -18,7 +19,8 @@ static header_t *_flist_head;
 
 void kheap_init(void) {
 	_wild = HEAP_VIRT_ADDR_START;
-	_flist_head = NULL;
+	base.next =_flist_head = &base;
+	base.size = 0;
 	printf("[Mem ] Heap initialized at %x\n", _wild);
 }
 
@@ -31,12 +33,6 @@ void *kmalloc(size_t nbytes) {
 	if (nbytes <= 0) 
 		return NULL;
 
-	/* If no free list yet, init */
-	if (_flist_head == NULL) {
-		base.next = _flist_head = &base;
-		base.size = 0;
-	}
-	
 	nunits = div_ceil(nbytes + sizeof(header_t), sizeof(header_t));
 	prev = _flist_head;
 
@@ -62,7 +58,6 @@ void *kmalloc(size_t nbytes) {
 }
 
 void kfree(void *ap) {
-	printf("[heap] KFREE\n");
 	header_t *bp, *p, *p_prev, *start;
 	bp = (header_t *) ap - 1;
 	for (p_prev = NULL, p = _flist_head; !(bp < p && bp > p->next); p_prev = p, p = p->next)
@@ -76,6 +71,7 @@ void kfree(void *ap) {
  		/* merge with upper boundary; original p data left free */
 		bp->size += p->size;
 		bp->next = p->next;
+		p->next = KERN_POISON_PAGE_FRAME;
 		p_prev->next = bp;
 	} else {
 		bp->next = p->next; 
@@ -86,6 +82,7 @@ void kfree(void *ap) {
 		/* merge with lower boundary; original bp data left free */
 		if (bp->next == start) 
 			start->next = start;
+		bp->next = KERN_POISON_PAGE_FRAME;
 		bp->next->size += bp->size;
 	}
 	print_flist_head(_flist_head);
@@ -107,9 +104,6 @@ void *acquire_more_heap(size_t nunits) {
 	npage_frames = div_ceil(nunits * sizeof(header_t), FOUR_KB);
 	nbytes = npage_frames * FOUR_KB;
 	
-	printf("Page frames needed: %n\n", npage_frames);
-	printf("Total bytes: %n\n", nbytes);
-
 	alloc_pages((virtual_addr *) _wild, npage_frames);
 
 	p = (header_t *) _wild;
@@ -127,7 +121,6 @@ void *acquire_more_heap(size_t nunits) {
 }
 
 void print_flist_head(header_t *head) {
-	printf("[heap] PRINTING: ");
 	header_t *cur = head;
 	do {
 		printf("@%x[%n|%x] ", cur, cur->size, cur->next); 
