@@ -71,7 +71,7 @@ void kfree(void *ap) {
  		/* merge with upper boundary; original p data left free */
 		bp->size += p->size;
 		bp->next = p->next;
-		p->next = KERN_POISON_PAGE_FRAME;
+		p->next = POISON_PAGE_FRAME;
 		p_prev->next = bp;
 	} else {
 		bp->next = p->next; 
@@ -82,7 +82,7 @@ void kfree(void *ap) {
 		/* merge with lower boundary; original bp data left free */
 		if (bp->next == start) 
 			start->next = start;
-		bp->next = KERN_POISON_PAGE_FRAME;
+		bp->next = POISON_PAGE_FRAME;
 		bp->next->size += bp->size;
 	}
 	print_flist_head(_flist_head);
