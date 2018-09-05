@@ -25,7 +25,6 @@ void kernel_init(struct multiboot_info *mb) {
 	phys_memory_init(mb);
 	virt_memory_init();
 	kheap_init();
-	kalloc_init();
 	kb_init();
 	timer_init();
 	asm(" sti ");
