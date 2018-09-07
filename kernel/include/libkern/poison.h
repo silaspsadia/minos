@@ -3,7 +3,7 @@
 
 #define POISON_RESERVED 		0xAA
 #define POISON_PAGE_FRAME 		0xBB
-#define POISON_NEVER_INIT 		0xCC
+#define POISON_NEVER_INIT 		0xAE
 #define POISON_EMPTY	 		NULL
 
 #endif /* LIBKERN_POISON_H */

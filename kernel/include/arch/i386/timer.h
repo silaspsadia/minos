@@ -2,6 +2,7 @@
 #define I386_TIMER_H
 #include <stddef.h>
 #include <stdint.h>
+#include <libkern/time.h>
 
 void timer_phase(int);
 void timer_handler(struct regs *);

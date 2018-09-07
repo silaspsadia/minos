@@ -3,10 +3,9 @@
 #include <arch/i386/interrupts.h>
 #include <arch/i386/io.h>
 #include <arch/i386/timer.h>
+#include <libkern/time.h>
 
 #define TICKS_PER_SECOND 100
-
-unsigned int _timer_ticks;
 
 void timer_phase(int hz) 
 {
@@ -18,14 +17,17 @@ void timer_phase(int hz)
 
 void timer_handler(struct regs *r) 
 {
-	_timer_ticks++;
-	if (_timer_ticks % TICKS_PER_SECOND == 0)
-		printf("Time since install: %i s\n", _timer_ticks / TICKS_PER_SECOND);
+	jiffies_64++;
+	jiffies = jiffies_64;
+	if (jiffies % TICKS_PER_SECOND == 0)
+		printf("Time since install: %i s\n", jiffies / TICKS_PER_SECOND);
 }
 
 void timer_init(void)
 {
+	
 	register_interrupt_handler(TIMER_IDT_INDEX, timer_handler);
 	timer_phase(TICKS_PER_SECOND);
+	jiffies = jiffies_64;
 	printf("[Init ] Timer installed successfully\n");
 }
