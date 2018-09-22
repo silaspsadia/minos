@@ -18,12 +18,14 @@ CPPFLAGS:=$(CPPFLAGS) -D__is_kernel -Iinclude
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
-ARCHDIR=arch/$(HOSTARCH)
-DEVICEDIR=devices
-LIBKERNDIR=libkern
+ARCHDIR:=arch/$(HOSTARCH)
+DEVICEDIR:=devices
+LIBKERNDIR:=libkern
+TESTDIR:=test/
 
 include $(ARCHDIR)/make.config
 include $(LIBKERNDIR)/make.config
+include $(TESTDIR)/make.config
 
 CFLAGS:=$(CFLAGS) $(KERNEL_ARCH_CFLAGS)
 CPPFLAGS:=$(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
@@ -38,8 +40,8 @@ OBJS=\
 $(KERNEL_OBJS) \
 $(ARCHDIR)/crti.o \
 $(ARCHDIR)/crtbegin.o \
-$(KERNEL_OBJS) \
 $(LIBKERN_OBJS) \
+$(TEST_OBJS) \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
 
