@@ -10,6 +10,7 @@
 #include <libkern/phys_mem.h>
 #include <libkern/virt_mem.h>
 #include <libkern/tst.h>
+#include <test/macros_test.h>
 
 void kernel_welcome(void) {
 	terminal_centerwrite("~*~*~*~*~*~*~*~*~*~*~\n");
@@ -27,6 +28,7 @@ void kernel_init(struct multiboot_info *mb) {
 	kheap_init();
 	kb_init();
 	timer_init();
+	macros_test();
 	asm(" sti ");
 }
 

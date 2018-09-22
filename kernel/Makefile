@@ -21,7 +21,7 @@ LIBS:=$(LIBS) -nostdlib -lk -lgcc
 ARCHDIR:=arch/$(HOSTARCH)
 DEVICEDIR:=devices
 LIBKERNDIR:=libkern
-TESTDIR:=test/
+TESTDIR:=test
 
 include $(ARCHDIR)/make.config
 include $(LIBKERNDIR)/make.config
@@ -51,6 +51,7 @@ $(ARCHDIR)/crti.o \
 $(ARCHDIR)/crtbegin.o \
 $(KERNEL_OBJS) \
 $(LIBKERN_OBJS) \
+$(TEST_OBJS) \
 $(LIBS) \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
