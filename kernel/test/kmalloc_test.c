@@ -1,18 +1,24 @@
-#include <test/macros_test.h>
+#include <libkern/heap.h>
+#include <test/kmalloc_test.h>
 #include <test/unit.h>
 
-NEW_TEST_SUITE(MacrosTest, 5);
+NEW_TEST_SUITE(kmallocTest, 3);
 
-TEST(EmptyMacrosTest) {}
+TEST(ExpectKmalloc0ByteRequestNull)
+{
+	EXPECT_EQ(NULL, kmalloc(0));
+}
 
-TEST(ExpectEqTestPass) { EXPECT_EQ(23, 23); }
+TEST(LowerBoundaryKmalloc)
+{
+	EXPECT_NQ(NULL, kmalloc(1));
+}
 
-TEST(ExpectEqTestFail) { EXPECT_EQ(-331, 31231); }
-
-TEST(ExpectTrueTestPass) { EXPECT_TRUE(23332); }
-
-TEST(ExpectTrueTestFail) { EXPECT_TRUE(0); }
+TEST(HighBoundaryKmalloc)
+{
+	EXPECT_NQ(NULL, kmalloc(50000));
+}
 
 END_SUITE();
 
-void macros_test(void) { RUN_SUITE(MacrosTest); }
+void kmalloc_test(void) { RUN_SUITE(kmallocTest); }

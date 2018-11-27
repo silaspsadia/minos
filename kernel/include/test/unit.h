@@ -36,7 +36,7 @@ typedef struct test_info_t {
 			failed_tests++; \
 		} \
 	} \
-	printf("%s suite: %d/%d tests passed.\n", name, test_count, test_count); \
+	printf("%s suite: %d/%d tests passed.\n", name, test_count-failed_tests, test_count); \
         } \
 
 #define RUN_SUITE(suite_name) \
