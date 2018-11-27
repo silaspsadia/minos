@@ -6,19 +6,23 @@
 
 // Functions to manipulate the bitmap
 
-inline static void map_set(int bit) {
+inline static void map_set(int bit)
+{
 	phys_memory_map_[bit / 32] |= (1 << (bit % 32));
 }
 
-inline static void map_unset(int bit) {
+inline static void map_unset(int bit)
+{
 	phys_memory_map_[bit / 32] &= ~(1 << (bit % 32));
 }
 
-inline static bool map_test(int bit) {
+inline static bool map_test(int bit)
+{
 	return phys_memory_map_[bit / 32] & (1 << (bit % 32));
 }
 
-int find_free_block() {
+int find_free_block(void)
+{
 	for (uint32_t i = 0; i < total_blocks_; i++) {
 		uint32_t block = phys_memory_map_[i];
 		if (block != 0xFFFFFFFF) {
@@ -33,7 +37,8 @@ int find_free_block() {
 	return -1;
 }
 
-int find_free_blocks(uint32_t count) {
+int find_free_blocks(uint32_t count)
+{
 	int starting_block = -1;
 	int starting_block_bit = -1;
 	uint32_t cur_block_num = 0;
@@ -63,7 +68,8 @@ int find_free_blocks(uint32_t count) {
 }
 
 // Functions to manage a single block in memory
-physical_addr alloc_block() {
+physical_addr alloc_block(void)
+{
 	if (total_blocks_ - used_blocks_ <= 0) 
 		return 0;
 
@@ -77,21 +83,24 @@ physical_addr alloc_block() {
 	return addr;
 }
 
-void free_block(physical_addr addr) {
+void free_block(physical_addr addr)
+{
 	int block = addr / PHYS_BLOCK_SIZE;
 
 	map_unset(block);
 	used_blocks_--;
 }
 
-bool is_alloced(physical_addr addr) {
+bool is_alloced(physical_addr addr)
+{
 	int block = addr / PHYS_BLOCK_SIZE;
 	return map_test(block);
 }
 
 // Functions to allocate multiple blocks of memory
 
-physical_addr alloc_blocks(uint32_t count) {
+physical_addr alloc_blocks(uint32_t count)
+{
 	if (total_blocks_ - used_blocks_ <= 0) {
 		return 0;
 	}	
@@ -110,7 +119,8 @@ physical_addr alloc_blocks(uint32_t count) {
 	return addr;
 }
 
-void free_blocks(physical_addr addr, uint32_t count) {
+void free_blocks(physical_addr addr, uint32_t count)
+{
 	int block = addr / PHYS_BLOCK_SIZE;
 
 	for (uint32_t i = 0; i < count; i++) map_unset(block + i);
@@ -120,7 +130,8 @@ void free_blocks(physical_addr addr, uint32_t count) {
 
 // Internal functions to allocate ranges of memory
 
-void allocate_chunk(int base_addr, int length) {
+void allocate_chunk(int base_addr, int length)
+{
 	int cur_block_addr = base_addr / PHYS_BLOCK_SIZE;
 	int num_blocks = length / PHYS_BLOCK_SIZE;
 	while (num_blocks-- >= 0) {
@@ -129,7 +140,8 @@ void allocate_chunk(int base_addr, int length) {
 	}
 }
 
-void free_chunk(int base_addr, int length) {
+void free_chunk(int base_addr, int length) 
+{
 	int cur_block_addr = base_addr / PHYS_BLOCK_SIZE;
 	int num_blocks = length / PHYS_BLOCK_SIZE;
 
@@ -141,7 +153,8 @@ void free_chunk(int base_addr, int length) {
 
 // Functions to initialize the Physical Memory Manager
 
-void free_available_memory(struct multiboot_info* mb) {
+void free_available_memory(struct multiboot_info* mb)
+{
 	multiboot_memory_map_t* mm = (multiboot_memory_map_t*)mb->mmap_addr;
 	while ((unsigned int)mm < mb->mmap_addr + mb->mmap_length) {
 		if (mm->type == MULTIBOOT_MEMORY_AVAILABLE) {
@@ -152,7 +165,8 @@ void free_available_memory(struct multiboot_info* mb) {
 	map_set(0);
 }
 
-void phys_memory_init(struct multiboot_info* mb) {
+void phys_memory_init(struct multiboot_info* mb)
+{
 	phys_mem_size_kb_ = mb->mem_upper + mb->mem_lower;
 	total_blocks_ = (phys_mem_size_kb_ * 1024) / PHYS_BLOCK_SIZE;
 	used_blocks_ = total_blocks_;
@@ -175,4 +189,7 @@ void phys_memory_init(struct multiboot_info* mb) {
 		kernel_phys_map_start, kernel_phys_map_end);
 }
 
-void update_map_addr(physical_addr addr) { phys_memory_map_ = (uint32_t*)addr; }
+void update_map_addr(physical_addr addr)
+{ 
+	phys_memory_map_ = (uint32_t*)addr;
+}

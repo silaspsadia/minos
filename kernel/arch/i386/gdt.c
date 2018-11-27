@@ -32,7 +32,8 @@ gdt_ptr_t gdtp;
 
 
 void gdt_setgate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, 
-					uint8_t granularity) {
+	uint8_t granularity)
+{
 	gdt[num].limit_low 	 = 	limit ;
 
 	gdt[num].base_low 	 = 	base & 0xFFFF;
@@ -55,7 +56,8 @@ void gdt_setgate(int32_t num, uint32_t base, uint32_t limit, uint8_t access,
 }
 
 
-void gdt_init(void) {
+void gdt_init(void)
+{
 	gdtp.limit = sizeof(gdt_entry_t) * 3 - 1;
 	gdtp.base  = (uint32_t) &gdt;
 

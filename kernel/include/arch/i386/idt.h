@@ -6,6 +6,6 @@
 #define IDT_NUM_ENTRIES 256
 
 // Sets up the IDT, should be called on early initialization
-void idt_init();
+void idt_init(void);
 
 #endif  // _KERNEL_IDT_H

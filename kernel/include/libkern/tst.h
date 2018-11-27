@@ -22,19 +22,22 @@ tst_node *tst_node_init(void);
 void tst_node_insert(tst_node *head, char *word);
 void tst_insert(tst *tree, char *word);
 
-tst *tst_init(void) {
+tst *tst_init(void)
+{
 	tst *ret = kmalloc(sizeof(tst));
 	ret->head = tst_node_init();
 	return ret;
 }
 
-tst_node *tst_node_init(void) {
+tst_node *tst_node_init(void)
+{
 	tst_node *ret = kmalloc(sizeof(tst_node));
 	memset(ret, 0, sizeof(tst_node));
 	return ret;
 }
 
-void tst_node_insert(tst_node *head, char *word) {
+void tst_node_insert(tst_node *head, char *word)
+{
 	int diff;
 	char *substring = kmalloc(1000);
 	char cur_char = word[0];
@@ -67,12 +70,14 @@ void tst_node_insert(tst_node *head, char *word) {
 	}
 }
 
-void tst_insert(tst *tree, char *word) {
+void tst_insert(tst *tree, char *word)
+{
 	/* Put queuing and caching stuff here */
 	tst_node_insert(tree->head, word);
 }
 
-void tst_node_printout(tst_node *head, char *strconstruct) {
+void tst_node_printout(tst_node *head, char *strconstruct)
+{
 	if (head == NULL)
 		return;
 	int len = strlen(strconstruct);
@@ -93,11 +98,13 @@ void tst_node_printout(tst_node *head, char *strconstruct) {
 	tst_node_printout(head->right, strconstruct);
 }
 
-void tst_printout(tst *tree) {
+void tst_printout(tst *tree)
+{
 	tst_node_printout(tree->head, "");
 }
 
-int tst_find(tst *tree, char *word) {
+int tst_find(tst *tree, char *word)
+{
 	int i, diff;
 	char cur;
 	tst_node *cur_node = tree->head;

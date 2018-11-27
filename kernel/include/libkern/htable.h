@@ -41,7 +41,8 @@ struct htable *htable_init(int nb, unsigned int (*hf)(char *, size_t)) {
 	return ret;
 }
 
-void htable_insert(struct htable *ht, char *obj, size_t size) {
+void htable_insert(struct htable *ht, char *obj, size_t size)
+{
 	unsigned int index = ht->hash_function(obj, size) % ht->nbuckets;
 	struct htable_bucket_entry *bucket = (ht->buf)[index];
 	if (bucket == NULL) {
@@ -55,7 +56,8 @@ void htable_insert(struct htable *ht, char *obj, size_t size) {
 	}	
 }
 
-unsigned int stdhash(char *input, size_t size) {
+unsigned int stdhash(char *input, size_t size)
+{
 #define A 54059
 #define B 76963
 #define C 86869
@@ -66,7 +68,8 @@ unsigned int stdhash(char *input, size_t size) {
 	return h % C;
 }
 
-void htable_printout(struct htable *ht) {
+void htable_printout(struct htable *ht)
+{
 	for (int i = 0; i < ht->nbuckets; i++) {
 		struct htable_bucket_entry *curr = (ht->buf)[i];
 		printf("%i [-]->", i);

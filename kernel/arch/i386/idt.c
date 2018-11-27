@@ -73,7 +73,8 @@ DECLARE_INTERRUPT_HANDLER(45);
 DECLARE_INTERRUPT_HANDLER(46);
 DECLARE_INTERRUPT_HANDLER(47);
 
-void set_idt_entry(uint8_t num, uint64_t handler, uint16_t sel, uint8_t flags) {
+void set_idt_entry(uint8_t num, uint64_t handler, uint16_t sel, uint8_t flags)
+{
   idt[num].handler_lo = handler & 0xFFFF;
   idt[num].handler_hi = (handler >> 16) & 0xFFFF;
   idt[num].always0 = 0;
@@ -82,7 +83,8 @@ void set_idt_entry(uint8_t num, uint64_t handler, uint16_t sel, uint8_t flags) {
 }
 
 // Installs the IDT
-void idt_init() {
+void idt_init(void)
+{
   // Sets the special IDT pointer up
   idtp.limit = (sizeof(struct idt_entry) * IDT_NUM_ENTRIES) - 1;
   idtp.base = (uint32_t)&idt;

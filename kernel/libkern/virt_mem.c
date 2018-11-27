@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 
-bool alloc_page(virtual_addr vaddr) {
+bool alloc_page(virtual_addr vaddr)
+{
 	physical_addr paddr = alloc_block();
 	if (!paddr) 
 		return false;
@@ -12,7 +13,8 @@ bool alloc_page(virtual_addr vaddr) {
 	return true;
 }
 
-bool alloc_pages(virtual_addr vaddr, size_t count) {
+bool alloc_pages(virtual_addr vaddr, size_t count)
+{
 	int offset;
 	physical_addr paddr = alloc_blocks(count);
 	if (!paddr)
@@ -25,7 +27,8 @@ bool alloc_pages(virtual_addr vaddr, size_t count) {
 	return true;
 }
 
-void free_page(virtual_addr addr) {
+void free_page(virtual_addr addr)
+{
 	pd_entry* pd_entry = pdirectory_lookup_entry(cur_directory, addr);
 	if (!pd_entry) 
 		return;
@@ -42,7 +45,8 @@ void free_page(virtual_addr addr) {
 	pt_entry_del_attrib(pt_entry, I86_PTE_PRESENT);
 }
 
-void map_page(physical_addr paddr, virtual_addr vaddr) {
+void map_page(physical_addr paddr, virtual_addr vaddr)
+{
 	pd_entry* entry = pdirectory_lookup_entry(cur_directory, vaddr);
 	if (!pd_entry_is_present(*entry)) {
 		// Page Directory Entry not present, allocate it
@@ -76,7 +80,8 @@ void map_page(physical_addr paddr, virtual_addr vaddr) {
 	flush_tlb_entry(vaddr);
 }
 
-uint32_t virt_to_phys(virtual_addr addr) {
+uint32_t virt_to_phys(virtual_addr addr)
+{
 	pd_entry* pd_entry = pdirectory_lookup_entry(cur_directory, addr);
 	if (!pd_entry) 
 		return -1;
@@ -85,7 +90,8 @@ uint32_t virt_to_phys(virtual_addr addr) {
 	return PAGE_GET_PHYSICAL_ADDRESS(pt_entry);
 }
 
-void virt_memory_init() {
+void virt_memory_init(void)
+{
 	// Allocates first MB page table
 	page_table* table = (page_table*)alloc_block();
 	if (!table) 

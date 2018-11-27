@@ -7,7 +7,7 @@
 
 #define TICKS_PER_SECOND 100
 
-void timer_phase(int hz) 
+void timer_phase(int hz)
 {
 	int divisor = 1193180 / hz;
 	outb(0x43, 0x36); 
@@ -15,12 +15,14 @@ void timer_phase(int hz)
 	outb(0x40, divisor >> 8);
 }
 
-void timer_handler(struct regs *r) 
+void timer_handler(struct regs *r)
 {
 	jiffies_64++;
 	jiffies = jiffies_64;
+#ifdef TIME_DISPLAY
 	if (jiffies % TICKS_PER_SECOND == 0)
 		printf("Time since install: %i s\r", jiffies / TICKS_PER_SECOND);
+#endif
 }
 
 void timer_init(void)

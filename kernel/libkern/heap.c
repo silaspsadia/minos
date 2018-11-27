@@ -14,17 +14,19 @@
 #define MIN_BLOCK_SIZE 1024
 
 static header_t base;
-static header_t *_wild;
+static header_t *wilderness;
 static header_t *_flist_head;
 
-void kheap_init(void) {
-	_wild = HEAP_VIRT_ADDR_START;
+void kheap_init(void)
+{
+	wilderness = HEAP_VIRT_ADDR_START;
 	base.next =_flist_head = &base;
 	base.size = 0;
-	printf("[Mem ] Heap initialized at %x\n", _wild);
+	printf("[Mem ] Heap initialized at %x\n", wilderness);
 }
 
-void *kmalloc(size_t nbytes) {
+void *__kmalloc(size_t nbytes)
+{
 	printf("[heap] KMALLOC\n");
 	header_t *cur, *prev;
 	size_t nunits;	
@@ -57,7 +59,16 @@ void *kmalloc(size_t nbytes) {
 	}
 }
 
-void kfree(void *ap) {
+void *kmalloc(size_t size)
+{
+	void *p = __kmalloc(size);
+	if (p)
+		memset(p, '\0', size);
+	return p;	
+}
+
+void kfree(void *ap)
+{
 	header_t *bp, *p, *p_prev, *start;
 	bp = (header_t *) ap - 1;
 	for (p_prev = NULL, p = _flist_head; !(bp < p && bp > p->next); p_prev = p, p = p->next)
@@ -88,14 +99,8 @@ void kfree(void *ap) {
 	print_flist_head(_flist_head);
 }
 
-void *kcalloc(size_t nmemb, size_t size) {
-	size_t nbytes = nmemb * size;
-	void *p = kmalloc(nbytes);
-	memset(p, 0, nbytes);
-	return p;
-}
-
-void *acquire_more_heap(size_t nunits) {
+void *acquire_more_heap(size_t nunits)
+{
 	size_t nbytes, npage_frames;		
 	header_t *p, *save;
 	
@@ -104,9 +109,9 @@ void *acquire_more_heap(size_t nunits) {
 	npage_frames = div_ceil(nunits * sizeof(header_t), FOUR_KB);
 	nbytes = npage_frames * FOUR_KB;
 	
-	alloc_pages((virtual_addr *) _wild, npage_frames);
+	alloc_pages((virtual_addr *) wilderness, npage_frames);
 
-	p = (header_t *) _wild;
+	p = (header_t *) wilderness;
 	p->size = nbytes / sizeof(header_t);
 	p->next = _flist_head->next;
 
@@ -116,11 +121,12 @@ void *acquire_more_heap(size_t nunits) {
 	} else { 
 		_flist_head->next = p;
 	}
-	_wild += nbytes;
+	wilderness += nbytes;
 	return p;
 }
 
-void print_flist_head(header_t *head) {
+void print_flist_head(header_t *head)
+{
 	header_t *cur = head;
 	do {
 		printf("@%x[%n|%x] ", cur, cur->size, cur->next); 

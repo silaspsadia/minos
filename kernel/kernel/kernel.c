@@ -12,13 +12,15 @@
 #include <libkern/tst.h>
 #include <test/macros_test.h>
 
-void kernel_welcome(void) {
+void kernel_welcome(void)
+{
 	terminal_centerwrite("~*~*~*~*~*~*~*~*~*~*~\n");
 	terminal_centerwrite("* Welcome to MinOS. *\n");
 	terminal_centerwrite("*~*~*~*~*~*~*~*~*~*~*\n\n");
 }
 
-void kernel_init(struct multiboot_info *mb) {
+void kernel_init(struct multiboot_info *mb)
+{
 	terminal_initialize();
 	kernel_welcome();
 	gdt_init();
@@ -33,7 +35,8 @@ void kernel_init(struct multiboot_info *mb) {
 }
 
 
-void kernel_main(void) {
+void kernel_main(void)
+{
 	for(;;)
 		asm("hlt");
 }
