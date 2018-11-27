@@ -97,7 +97,6 @@ void kfree(void *ap)
 		bp->next->size += bp->size;
 	}
 	print_flist_head(_flist_head);
-	memset(*(unsigned char *)ap, '\0', 8);
 }
 
 void *acquire_more_heap(size_t nunits)
