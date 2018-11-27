@@ -63,7 +63,8 @@ void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y) {
 void terminal_putchar(char c) {
 	// Logical characters shouldn't be rendered, but processed instead
 	line_fill[terminal_row] = terminal_column;
-	if (c == '\n') {
+	switch (c) {
+	case '\n':	
 		if (terminal_row + 1 == VGA_HEIGHT) {
 			terminal_scrolldown();
 			return;
@@ -71,18 +72,27 @@ void terminal_putchar(char c) {
 		terminal_row++;
 		terminal_column = 0;
 		set_cursor(terminal_column, terminal_row); 
-		return;
-	}	
-	unsigned char uc = c;
-	terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
-	set_cursor(terminal_column + 1, terminal_row);
-	if (++terminal_column == VGA_WIDTH) {
+		break;
+		
+	case '\r':
 		terminal_column = 0;
-		// When reaches end of frame, enable (basic) terminal scrolling
-		if (++terminal_row == VGA_HEIGHT) {	
-			terminal_scrolldown();
+		break;
+
+	default: ;
+		unsigned char uc = c;
+		terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
+		set_cursor(terminal_column + 1, terminal_row);
+		if (++terminal_column == VGA_WIDTH) {
+			terminal_column = 0;
+			// When reaches end of frame, enable (basic) terminal scrolling
+			if (++terminal_row == VGA_HEIGHT) {	
+				terminal_scrolldown();
+			}
 		}
+		break;
+		
 	}
+	return;
 }
 
 void terminal_backspace(void) {

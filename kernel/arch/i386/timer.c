@@ -20,7 +20,7 @@ void timer_handler(struct regs *r)
 	jiffies_64++;
 	jiffies = jiffies_64;
 	if (jiffies % TICKS_PER_SECOND == 0)
-		printf("Time since install: %i s\n", jiffies / TICKS_PER_SECOND);
+		printf("Time since install: %i s\r", jiffies / TICKS_PER_SECOND);
 }
 
 void timer_init(void)
