@@ -57,7 +57,6 @@ TEST(FreeBlocksIndividually)
 TEST(UsedBlockCounter)
 {
 	uint32_t used = used_blocks_;
-	printf("Used: %u\tTotal:%u\n", used_blocks_, total_blocks_);
 	physical_addr first_block = alloc_blocks(33);
 	EXPECT_EQ(used_blocks_, used + 33);
 	free_blocks(first_block, 33);
