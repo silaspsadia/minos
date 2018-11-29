@@ -12,6 +12,7 @@
 #include <libkern/tst.h>
 #include <test/macros_test.h>
 #include <test/kmalloc_test.h>
+#include <test/phys_mem_test.h>
 
 void kernel_welcome(void)
 {
@@ -33,6 +34,7 @@ void kernel_init(struct multiboot_info *mb)
 	timer_init();
 	macros_test();
 	kmalloc_test();
+	phys_mem_test();
 	asm(" sti ");
 }
 
