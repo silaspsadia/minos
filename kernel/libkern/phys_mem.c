@@ -4,6 +4,11 @@
 #include <extern/multiboot.h>
 #include <libkern/phys_mem.h>
 
+uint32_t *phys_memory_map_ = NULL;
+uint32_t phys_mem_size_kb_ = 0;
+uint32_t used_blocks_ = 0;
+uint32_t total_blocks_ = 0;
+
 // Functions to manipulate the bitmap
 
 inline static void map_set(int bit)
@@ -28,9 +33,8 @@ int find_free_block(void)
 		if (block != 0xFFFFFFFF) {
 			for (uint8_t j = 0; j < 32; j++) {
 				int bit = 1 << j;
-				if (!(bit & block)) {
+				if (!(bit & block))
 					return (32 * i) + j;
-				}
 			}
 		}
 	}
@@ -55,13 +59,13 @@ int find_free_blocks(uint32_t count)
 				cur_block_num = 0;
 				continue;
 			}
-
-			if (!cur_block_num) starting_block = i;
-			if (!cur_block_num) starting_block_bit = j;
-			cur_block_num += 1;
-			if (cur_block_num == count) {
-				return (32 * starting_block) + starting_block_bit;
+			if (!cur_block_num) {
+				starting_block = i;
+				starting_block_bit = j;
 			}
+			cur_block_num += 1;
+			if (cur_block_num == count)
+				return (32 * starting_block) + starting_block_bit;
 		}
 	}
 	return -1;
@@ -101,18 +105,15 @@ bool is_alloced(physical_addr addr)
 
 physical_addr alloc_blocks(uint32_t count)
 {
-	if (total_blocks_ - used_blocks_ <= 0) {
+	if (total_blocks_ - used_blocks_ <= 0)
 		return 0;
-	}	
 
 	int free_block = find_free_blocks(count);
-	if (free_block == -1) {
+	if (free_block == -1)
 		return 0;
-	}
 
-	for (uint32_t i = 0; i < count; i++) {
+	for (uint32_t i = 0; i < count; i++)
 		map_set(free_block + i);
-	}	
 
 	uint32_t addr = free_block * PHYS_BLOCK_SIZE;
 	used_blocks_ += count;
@@ -123,7 +124,8 @@ void free_blocks(physical_addr addr, uint32_t count)
 {
 	int block = addr / PHYS_BLOCK_SIZE;
 
-	for (uint32_t i = 0; i < count; i++) map_unset(block + i);
+	for (uint32_t i = 0; i < count; i++)
+		map_unset(block + i);
 
 	used_blocks_ -= count;
 }
@@ -136,7 +138,7 @@ void allocate_chunk(int base_addr, int length)
 	int num_blocks = length / PHYS_BLOCK_SIZE;
 	while (num_blocks-- >= 0) {
 		map_set(cur_block_addr++);
-		used_blocks_--;
+		used_blocks_++;
 	}
 }
 
@@ -157,9 +159,8 @@ void free_available_memory(struct multiboot_info* mb)
 {
 	multiboot_memory_map_t* mm = (multiboot_memory_map_t*)mb->mmap_addr;
 	while ((unsigned int)mm < mb->mmap_addr + mb->mmap_length) {
-		if (mm->type == MULTIBOOT_MEMORY_AVAILABLE) {
+		if (mm->type == MULTIBOOT_MEMORY_AVAILABLE)
 			free_chunk(mm->addr, mm->len);
-		}
 		mm = (multiboot_memory_map_t*)((unsigned int)mm + mm->size + sizeof(mm->size));
 	}
 	map_set(0);
@@ -169,7 +170,6 @@ void phys_memory_init(struct multiboot_info* mb)
 {
 	phys_mem_size_kb_ = mb->mem_upper + mb->mem_lower;
 	total_blocks_ = (phys_mem_size_kb_ * 1024) / PHYS_BLOCK_SIZE;
-	used_blocks_ = total_blocks_;
 	phys_memory_map_ = (uint32_t*)KERNEL_END_PADDR;
 	memset(phys_memory_map_, 0xFF, total_blocks_ / PHYS_BLOCKS_PER_BYTE);
 	printf("[Mem ] PMEM set up. Total blocks: %ld\n", total_blocks_);
