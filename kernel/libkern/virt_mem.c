@@ -33,7 +33,7 @@ void free_page(virtual_addr addr)
 	if (!pd_entry) 
 		return;
 
-	page_table* table = (page_table*)PAGE_GET_PHYSICAL_ADDRESS(pd_entry);
+	page_table *table = (page_table *)PAGE_GET_PHYSICAL_ADDRESS(pd_entry);
 	pt_entry* pt_entry = ptable_lookup_entry(table, addr);
 	if (!pt_entry) 
 		return;

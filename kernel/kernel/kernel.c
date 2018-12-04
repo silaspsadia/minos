@@ -35,6 +35,7 @@ void kernel_init(struct multiboot_info *mb)
 	macros_test();
 	kmalloc_test();
 	phys_mem_test();
+	virt_mem_test();
 	asm(" sti ");
 }
 
