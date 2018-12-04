@@ -25,7 +25,6 @@ TEST(AllocPage)
 
 TEST(FreeOneVaddr)
 {
-	alloc_page(TEST_ADDR);
 	free_page(TEST_ADDR);
 	pd_entry *pde = pdirectory_lookup_entry(cur_directory, TEST_ADDR);
 	page_table *pt = (page_table *)PAGE_GET_PHYSICAL_ADDRESS(pde);
@@ -35,6 +34,16 @@ TEST(FreeOneVaddr)
 	EXPECT_FALSE(pt_entry_is_present(pte));	
 }
 
+TEST(VirtToPhys)
+{
+	physical_addr paddr_from_lookup;
+	physical_addr paddr_from_frame;
+	
+	alloc_page(TEST_ADDR);
+	paddr_from_lookup = virt_to_phys(TEST_ADDR);
+	EXPECT_NQ(NULL, paddr_from_lookup);
+	free_page(TEST_ADDR);
+}
 
 END_SUITE();
 
