@@ -14,6 +14,8 @@
 #include <test/kmalloc_test.h>
 #include <test/phys_mem_test.h>
 
+#define TEST 1
+
 void kernel_welcome(void)
 {
 	terminal_centerwrite("~*~*~*~*~*~*~*~*~*~*~\n");
@@ -32,10 +34,12 @@ void kernel_init(struct multiboot_info *mb)
 	kheap_init();
 	kb_init();
 	timer_init();
+#ifdef TEST
 	macros_test();
 	kmalloc_test();
 	phys_mem_test();
 	virt_mem_test();
+#endif
 	asm(" sti ");
 }
 

@@ -2,7 +2,7 @@
 #include <test/kmalloc_test.h>
 #include <test/unit.h>
 
-NEW_TEST_SUITE(kmallocTest, 4);
+NEW_TEST_SUITE(kmallocTest, 5);
 
 TEST(ExpectKmalloc0ByteRequestNull)
 {
@@ -19,18 +19,15 @@ TEST(HighBoundaryKmalloc)
 	EXPECT_NQ(NULL, kmalloc(50000));
 }
 
-TEST(InterleavedKmalloc)
+TEST(ConsecutiveAcquireMoreHeap)
 {
-	void *ptr_before = kmalloc(HEAP_BLOCK_SIZE * 5);
-	void *ptr_mid = kmalloc(HEAP_BLOCK_SIZE * 3);
-	void *ptr_after = kmalloc(HEAP_BLOCK_SIZE * 8);
+	void *ptr_before = kmalloc(256);
+	void *ptr_mid = kmalloc(10000);
+	void *ptr_after = kmalloc(10000);
 
-	EXPECT_GT(ptr_mid, ptr_before);
-	EXPECT_LT(ptr_mid, ptr_after);
-
-	kfree(ptr_before);
-	kfree(ptr_mid);
-	kfree(ptr_after);
+	EXPECT_NQ(NULL, ptr_before);
+	EXPECT_NQ(NULL, ptr_mid);
+	EXPECT_NQ(NULL, ptr_after);
 }
 
 END_SUITE();

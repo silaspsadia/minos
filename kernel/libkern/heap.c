@@ -13,19 +13,21 @@
 
 #define MIN_BLOCK_SIZE 1024
 
-static header_t base;
 static header_t *wilderness;
 static header_t *_flist_head;
 
 void kheap_init(void)
 {
 	wilderness = HEAP_VIRT_ADDR_START;
-	base.next =_flist_head = &base;
-	base.size = 0;
-	printf("[Mem ] Heap initialized at %x\n", wilderness);
+	alloc_pages((virtual_addr *) wilderness, 2);
+	_flist_head = wilderness;
+	_flist_head->size = 8192 / sizeof(header_t);
+	_flist_head->next = _flist_head;
+	wilderness += 8192;
+	printf("[Mem ] Heap initialized at %x\n", _flist_head);
 }
 
-void *__kmalloc(size_t nbytes)
+void *kmalloc(size_t nbytes)
 {
 	printf("[heap] KMALLOC\n");
 	header_t *cur, *prev;
@@ -53,18 +55,8 @@ void *__kmalloc(size_t nbytes)
 		if (cur == _flist_head) {
 			if ((cur = acquire_more_heap(nunits)) == NULL)
 				return NULL;
-			prev->next = cur;
-			cur = prev;
 		}
 	}
-}
-
-void *kmalloc(size_t size)
-{
-	void *p = __kmalloc(size);
-	if (p)
-		memset(p, '\0', size);
-	return p;	
 }
 
 void kfree(void *ap)
@@ -101,6 +93,8 @@ void kfree(void *ap)
 
 void *acquire_more_heap(size_t nunits)
 {
+	printf("[HEAP] Acquiring more heap...\n");
+	printf("Head at %x\n", _flist_head);
 	size_t nbytes, npage_frames;		
 	header_t *p, *save;
 	
@@ -115,12 +109,7 @@ void *acquire_more_heap(size_t nunits)
 	p->size = nbytes / sizeof(header_t);
 	p->next = _flist_head->next;
 
-	if (_flist_head->next = _flist_head) {
-		_flist_head = p;	
-		p->next = p;
-	} else { 
-		_flist_head->next = p;
-	}
+	_flist_head->next = p;
 	wilderness += nbytes;
 	return p;
 }

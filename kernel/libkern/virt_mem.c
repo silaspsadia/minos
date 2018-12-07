@@ -45,6 +45,15 @@ void free_page(virtual_addr addr)
 	pt_entry_del_attrib(pt_entry, I86_PTE_PRESENT);
 }
 
+void free_pages(virtual_addr addr, size_t count)
+{
+	int offset;
+	for (int i = 0; i < count; i++) {
+		offset = i * FOUR_KB;
+		free_page(addr + offset);
+	}
+}
+
 void map_page(physical_addr paddr, virtual_addr vaddr)
 {
 	pd_entry* entry = pdirectory_lookup_entry(cur_directory, vaddr);
