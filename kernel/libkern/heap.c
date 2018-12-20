@@ -15,6 +15,7 @@
 
 static header_t *wilderness;
 static header_t *_flist_head;
+static header_t base;
 
 void kheap_init(void)
 {
@@ -22,6 +23,7 @@ void kheap_init(void)
 	alloc_pages((virtual_addr *) wilderness, 2);
 	_flist_head = wilderness;
 	_flist_head->size = 8192 / sizeof(header_t);
+	_flist_head->prev = _flist_head;
 	_flist_head->next = _flist_head;
 	wilderness += 8192;
 	printf("[Mem ] Heap initialized at %x\n", _flist_head);
@@ -38,23 +40,25 @@ void *kmalloc(size_t nbytes)
 		return NULL;
 
 	nunits = div_ceil(nbytes + sizeof(header_t), sizeof(header_t));
-	prev = _flist_head;
 
-	for (cur = prev->next; ; prev = cur, cur = cur->next) {
+	for (cur = _flist_head; ; cur = cur->next) {
 		if (cur->size >= nunits) {
 			if (cur->size == nunits) {
-				prev->next = cur->next;
+				cur->prev->next = cur->next;
 			} else {
 				cur->size -= nunits;
 				cur += cur->size;
 				cur->size = nunits;
 			}	
 			print_flist_head(_flist_head);	
-			return (void *) (cur + 1);
+			return (header_t *) (cur + 1);
 		} 
 		if (cur == _flist_head) {
-			if ((cur = acquire_more_heap(nunits)) == NULL)
+			if ((cur = acquire_more_heap(nunits)) == NULL) {
+				printf("[ERROR] RETURNED NULL FROM ACQUIRE HEAP\n");
 				return NULL;
+			}
+			cur = cur->prev;
 		}
 	}
 }
@@ -71,17 +75,20 @@ void kfree(void *ap)
 				break;
 
 	if (bp + bp->size == p) {
+		printf("upper boundary merge\n");
  		/* merge with upper boundary; original p data left free */
 		bp->size += p->size;
 		bp->next = p->next;
 		p->next = POISON_PAGE_FRAME;
 		p_prev->next = bp;
 	} else {
+		printf("no upper boundary merge\n");
 		bp->next = p->next; 
 		p->next = bp;
 	}
 
 	if (bp->next + bp->next->size == bp) {
+		printf("lower boundary merge\n");
 		/* merge with lower boundary; original bp data left free */
 		if (bp->next == start) 
 			start->next = start;
@@ -93,23 +100,24 @@ void kfree(void *ap)
 
 void *acquire_more_heap(size_t nunits)
 {
-	printf("[HEAP] Acquiring more heap...\n");
-	printf("Head at %x\n", _flist_head);
+	printf("[HEAP] ***Acquiring more heap...\n");
 	size_t nbytes, npage_frames;		
 	header_t *p, *save;
 	
 	if (nunits < MIN_BLOCK_SIZE) 
 		nunits = MIN_BLOCK_SIZE;
 	npage_frames = div_ceil(nunits * sizeof(header_t), FOUR_KB);
-	nbytes = npage_frames * FOUR_KB;
-	
+	nbytes = npage_frames * FOUR_KB;	
 	alloc_pages((virtual_addr *) wilderness, npage_frames);
 
 	p = (header_t *) wilderness;
 	p->size = nbytes / sizeof(header_t);
-	p->next = _flist_head->next;
-
-	_flist_head->next = p;
+	printf("%i\n", p->size);
+	p->prev = _flist_head->prev;
+	p->next = _flist_head;
+	_flist_head->prev->next = p;
+	_flist_head->prev = p;
+	
 	wilderness += nbytes;
 	return p;
 }

@@ -14,7 +14,7 @@
 #include <test/kmalloc_test.h>
 #include <test/phys_mem_test.h>
 
-#define TEST 1
+//#define TEST 1
 
 void kernel_welcome(void)
 {
@@ -34,6 +34,7 @@ void kernel_init(struct multiboot_info *mb)
 	kheap_init();
 	kb_init();
 	timer_init();
+	kmalloc_test();
 #ifdef TEST
 	macros_test();
 	kmalloc_test();

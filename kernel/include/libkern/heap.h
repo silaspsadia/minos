@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 typedef struct header {
+	struct header *prev; // pointer to prev header
 	struct header *next; // pointer to next header
 	size_t size; // Size in header units, sizeof(header_t)
 } header_t;

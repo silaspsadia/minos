@@ -21,7 +21,7 @@ bool alloc_pages(virtual_addr vaddr, size_t count)
 		return false;
 	for (int i = 0; i < count; i++) {
 		offset = i * FOUR_KB;
-		printf("[VMEM] Allocating at vaddr %x\n", vaddr + offset);
+		//printf("[VMEM] Allocating at vaddr %x\n", vaddr + offset);
 		map_page(paddr + offset, vaddr + offset);
 	}
 	return true;
