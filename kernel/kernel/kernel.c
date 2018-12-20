@@ -14,7 +14,8 @@
 #include <test/kmalloc_test.h>
 #include <test/phys_mem_test.h>
 
-//#define TEST 1
+// TODO: handle TEST symbol better
+#define TEST 1
 
 void kernel_welcome(void)
 {
