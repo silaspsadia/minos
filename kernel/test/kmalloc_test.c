@@ -74,7 +74,11 @@ TEST(Kfree)
 	void *ptr4 = kmalloc(5000);
 	void *ptr5 = kmalloc(5000);
 	kfree(ptr4);
-
+	kfree(ptr2);
+	kfree(ptr0);
+	kfree(ptr5);
+	kfree(ptr3);
+	kfree(ptr1);
 }
 
 END_SUITE();
