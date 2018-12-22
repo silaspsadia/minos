@@ -50,7 +50,7 @@ void *kmalloc(size_t nbytes)
 				cur += cur->size;
 				cur->size = nunits;
 			}	
-			print_flist_head(_flist_head);	
+			print_flist_head();	
 			return (header_t *) (cur + 1);
 		} 
 		if (cur == _flist_head) {
@@ -65,6 +65,18 @@ void *kmalloc(size_t nbytes)
 
 void kfree(void *ap)
 {
+	header_t *bp, *p, *p_next;
+	bp = (header_t *) ap - 1;
+	for (p = _flist_head, p_next = _flist_head->next; ; p = p_next, p_next = p_next->next)
+		if ((p < bp && p_next > bp) || (p->next == _flist_head))
+			break;
+
+	bp->prev = p;
+	bp->next = p_next;
+	p_next->prev = bp;
+	p->next = bp;
+	print_flist_head();	
+/**
 	header_t *bp, *p, *p_prev, *start;
 	bp = (header_t *) ap - 1;
 	for (p_prev = NULL, p = _flist_head; !(bp < p && bp > p->next); p_prev = p, p = p->next)
@@ -76,7 +88,7 @@ void kfree(void *ap)
 
 	if (bp + bp->size == p) {
 		printf("upper boundary merge\n");
- 		/* merge with upper boundary; original p data left free */
+ 		// merge with upper boundary; original p data left free
 		bp->size += p->size;
 		bp->next = p->next;
 		p->next = POISON_PAGE_FRAME;
@@ -89,13 +101,14 @@ void kfree(void *ap)
 
 	if (bp->next + bp->next->size == bp) {
 		printf("lower boundary merge\n");
-		/* merge with lower boundary; original bp data left free */
+		// merge with lower boundary; original bp data left free
 		if (bp->next == start) 
 			start->next = start;
 		bp->next = POISON_PAGE_FRAME;
 		bp->next->size += bp->size;
 	}
-	print_flist_head(_flist_head);
+	print_flist_head();
+**/
 }
 
 void *acquire_more_heap(size_t nunits)
@@ -122,11 +135,11 @@ void *acquire_more_heap(size_t nunits)
 	return p;
 }
 
-void print_flist_head(header_t *head)
+void print_flist_head(void)
 {
-	header_t *cur = head;
+	header_t *cur = _flist_head;
 	do {
 		printf("@%x[%n|%x] ", cur, cur->size, cur->next); 
-	} while ((cur = cur->next) != head);
+	} while ((cur = cur->next) != _flist_head);
 	printf("\n");
 }

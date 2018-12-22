@@ -2,7 +2,7 @@
 #include <test/kmalloc_test.h>
 #include <test/unit.h>
 
-NEW_TEST_SUITE(kmallocTest, 6);
+NEW_TEST_SUITE(kmallocTest, 7);
 
 TEST(ExpectKmalloc0ByteRequestNull)
 {
@@ -62,6 +62,19 @@ TEST(ConsecutiveLargeKmalloc)
 	EXPECT_NQ(NULL, ptr3);
 	EXPECT_NQ(NULL, ptr4);
 	EXPECT_NQ(NULL, ptr5);
+}
+
+TEST(Kfree)
+{
+	// Should not kernel panic
+	void *ptr0 = kmalloc(5000);
+	void *ptr1 = kmalloc(5000);
+	void *ptr2 = kmalloc(5000);
+	void *ptr3 = kmalloc(5000);
+	void *ptr4 = kmalloc(5000);
+	void *ptr5 = kmalloc(5000);
+	kfree(ptr4);
+
 }
 
 END_SUITE();
