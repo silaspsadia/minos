@@ -75,40 +75,20 @@ void kfree(void *ap)
 	bp->next = p_next;
 	p_next->prev = bp;
 	p->next = bp;
-	print_flist_head();	
-/**
-	header_t *bp, *p, *p_prev, *start;
-	bp = (header_t *) ap - 1;
-	for (p_prev = NULL, p = _flist_head; !(bp < p && bp > p->next); p_prev = p, p = p->next)
-		if (p_prev == NULL)
-			start = _flist_head;
-		else 
-			if (p == start)
-				break;
-
+	
+	// TODO: freelist merge code
 	if (bp + bp->size == p) {
 		printf("upper boundary merge\n");
  		// merge with upper boundary; original p data left free
-		bp->size += p->size;
-		bp->next = p->next;
-		p->next = POISON_PAGE_FRAME;
-		p_prev->next = bp;
 	} else {
 		printf("no upper boundary merge\n");
-		bp->next = p->next; 
-		p->next = bp;
 	}
 
 	if (bp->next + bp->next->size == bp) {
 		printf("lower boundary merge\n");
 		// merge with lower boundary; original bp data left free
-		if (bp->next == start) 
-			start->next = start;
-		bp->next = POISON_PAGE_FRAME;
-		bp->next->size += bp->size;
 	}
 	print_flist_head();
-**/
 }
 
 void *acquire_more_heap(size_t nunits)
