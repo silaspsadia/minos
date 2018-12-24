@@ -31,7 +31,6 @@ void kheap_init(void)
 
 void *kmalloc(size_t nbytes)
 {
-	printf("[heap] KMALLOC\n");
 	header_t *cur, *prev;
 	size_t nunits;	
 
