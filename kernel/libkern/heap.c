@@ -75,18 +75,18 @@ void kfree(void *ap)
 	p_next->prev = bp;
 	p->next = bp;
 	
-	// TODO: freelist merge code
-	if (bp + bp->size == p) {
+	if (bp + bp->size == p_next) {
 		printf("upper boundary merge\n");
+		bp->size += p_next->size;
+		bp->next = p_next->next;
  		// merge with upper boundary; original p data left free
-	} else {
-		printf("no upper boundary merge\n");
-	}
-
-	if (bp->next + bp->next->size == bp) {
+	} else if (p + p->size == bp) {
 		printf("lower boundary merge\n");
+		p->next = p_next;
+		p_next->prev = p;
 		// merge with lower boundary; original bp data left free
 	}
+
 	print_flist_head();
 }
 
