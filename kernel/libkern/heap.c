@@ -32,6 +32,7 @@ void kheap_init(void)
 
 void *kmalloc(size_t nbytes)
 {
+	printf("[DEBUG] kmalloc\n");
 	header_t *cur, *prev;
 	size_t nunits;	
 
@@ -64,6 +65,7 @@ void *kmalloc(size_t nbytes)
 
 void kfree(void *ap)
 {
+	printf("[DEBUG] kfree\n");
 	header_t *bp, *p, *p_next;
 	bp = (header_t *) ap - 1;
 	for (p = _flist_head, p_next = _flist_head->next; ; p = p_next, p_next = p_next->next)
@@ -91,7 +93,7 @@ void kfree(void *ap)
 
 void *acquire_more_heap(size_t nunits)
 {
-	printf("[HEAP] ***Acquiring more heap...\n");
+	printf("[DEBUG] acquire_more_heap\n");
 	size_t nbytes, npage_frames;		
 	header_t *p, *save;
 	

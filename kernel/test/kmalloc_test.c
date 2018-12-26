@@ -2,7 +2,7 @@
 #include <test/kmalloc_test.h>
 #include <test/unit.h>
 
-NEW_TEST_SUITE(kmallocTest, 8);
+NEW_TEST_SUITE(kmallocTest, 9);
 
 TEST(ExpectKmalloc0ByteRequestNull)
 {
@@ -85,8 +85,19 @@ TEST(HeapReset)
 {
 	header_t *cur = get_flist_head();
 	__kheap_reset();
+	print_flist_head();	
 	EXPECT_EQ(cur, cur->prev);	
-	EXPECT_EQ(cur, cur->next);	
+	EXPECT_EQ(cur, cur->next);
+}
+
+TEST(FillandEmptyHeap)
+{
+	void *ptr0 = kmalloc(4000);
+	void *ptr1 = kmalloc(4000);
+	print_flist_head();	
+	kfree(ptr0);
+	kfree(ptr1);
+	print_flist_head();	
 }
 
 END_SUITE();
