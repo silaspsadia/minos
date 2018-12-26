@@ -54,7 +54,6 @@ void *kmalloc(size_t nbytes)
 		} 
 		if (cur == _flist_head) {
 			if ((cur = acquire_more_heap(nunits)) == NULL) {
-				printf("[ERROR] RETURNED NULL FROM ACQUIRE HEAP\n");
 				return NULL;
 			}
 			cur = cur->prev;
@@ -79,12 +78,10 @@ void kfree(void *ap)
 		printf("upper boundary merge\n");
 		bp->size += p_next->size;
 		bp->next = p_next->next;
- 		// merge with upper boundary; original p data left free
 	} else if (p + p->size == bp) {
 		printf("lower boundary merge\n");
 		p->next = p_next;
 		p_next->prev = p;
-		// merge with lower boundary; original bp data left free
 	}
 
 	print_flist_head();
