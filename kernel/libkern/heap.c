@@ -11,7 +11,8 @@
 #include <libkern/virt_mem.h>
 #include <libkern/heap.h>
 
-#define MIN_BLOCK_SIZE 1024
+#define MIN_BLOCK_SIZE 	1024
+#define HEAP_START_SIZE (8192 / sizeof(header_t))
 
 static header_t *wilderness;
 static header_t *_flist_head;
@@ -22,7 +23,7 @@ void kheap_init(void)
 	wilderness = HEAP_VIRT_ADDR_START;
 	alloc_pages((virtual_addr *) wilderness, 2);
 	_flist_head = wilderness;
-	_flist_head->size = 8192 / sizeof(header_t);
+	_flist_head->size = HEAP_START_SIZE;
 	_flist_head->prev = _flist_head;
 	_flist_head->next = _flist_head;
 	wilderness += 8192;
@@ -80,10 +81,11 @@ void kfree(void *ap)
 		bp->next = p_next->next;
 	} else if (p + p->size == bp) {
 		printf("lower boundary merge\n");
+		p->size += bp->size;
 		p->next = p_next;
 		p_next->prev = p;
 	}
-
+	
 	print_flist_head();
 }
 
@@ -109,6 +111,18 @@ void *acquire_more_heap(size_t nunits)
 	
 	wilderness += nbytes;
 	return p;
+}
+
+void __kheap_reset(void)
+{
+	_flist_head->next = _flist_head;
+	_flist_head->prev = _flist_head;
+	_flist_head->size = HEAP_START_SIZE;
+}
+
+void *get_flist_head(void)
+{
+	return (void *)_flist_head;
 }
 
 void print_flist_head(void)

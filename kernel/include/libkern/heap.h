@@ -17,6 +17,8 @@ void kheap_init(void);
 void *kmalloc(size_t);
 void kfree(void *);
 void *acquire_more_heap(size_t);
+void __kheap_reset(void);
 void print_flist(header_t*);
+void *get_flist_head(void);
 
 #endif  // LIBKERN_HEAP_H
