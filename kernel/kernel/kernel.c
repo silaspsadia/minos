@@ -35,7 +35,6 @@ void kernel_init(struct multiboot_info *mb)
 	kheap_init();
 	kb_init();
 	timer_init();
-	kmalloc_test();
 #ifdef TEST
 	macros_test();
 	kmalloc_test();
