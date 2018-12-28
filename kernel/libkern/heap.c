@@ -68,10 +68,12 @@ void kfree(void *ap)
 	printf("[DEBUG] kfree\n");
 	header_t *bp, *p, *p_next;
 	bp = (header_t *) ap - 1;
+	printf("[DEBUG] freeing region of size: %i units\n", bp->size);
 	for (p = _flist_head, p_next = _flist_head->next; ; p = p_next, p_next = p_next->next)
 		if ((p < bp && p_next > bp) || (p->next == _flist_head))
 			break;
 
+	printf("[p|bp|p_next]: [%x|%x|%x]\n", p, bp, p_next);
 	bp->prev = p;
 	bp->next = p_next;
 	p_next->prev = bp;
@@ -81,6 +83,8 @@ void kfree(void *ap)
 		printf("upper boundary merge\n");
 		bp->size += p_next->size;
 		bp->next = p_next->next;
+		if (p->prev == p_next)
+			p->prev = bp;
 	} else if (p + p->size == bp) {
 		printf("lower boundary merge\n");
 		p->size += bp->size;
@@ -131,7 +135,7 @@ void print_flist_head(void)
 {
 	header_t *cur = _flist_head;
 	do {
-		printf("@%x[%n|%x] ", cur, cur->size, cur->next); 
+		printf("@%x[%x|%n|%x] ", cur, cur->prev, cur->size, cur->next); 
 	} while ((cur = cur->next) != _flist_head);
 	printf("\n");
 }

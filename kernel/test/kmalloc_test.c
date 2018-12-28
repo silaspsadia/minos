@@ -2,7 +2,7 @@
 #include <test/kmalloc_test.h>
 #include <test/unit.h>
 
-NEW_TEST_SUITE(kmallocTest, 9);
+NEW_TEST_SUITE(kmallocTest, 11);
 
 TEST(ExpectKmalloc0ByteRequestNull)
 {
@@ -83,11 +83,11 @@ TEST(Kfree)
 
 TEST(HeapReset)
 {
-	header_t *cur = get_flist_head();
+	header_t *head = get_flist_head();
 	__kheap_reset();
 	print_flist_head();	
-	EXPECT_EQ(cur, cur->prev);	
-	EXPECT_EQ(cur, cur->next);
+	EXPECT_EQ(head, head->prev);	
+	EXPECT_EQ(head, head->next);
 }
 
 TEST(FillandEmptyHeap)
@@ -98,6 +98,37 @@ TEST(FillandEmptyHeap)
 	kfree(ptr0);
 	kfree(ptr1);
 	print_flist_head();	
+	__kheap_reset();
+}
+
+TEST(UpperBoundaryMerge)
+{
+	header_t *head = get_flist_head();
+	size_t size_at_start = head->size;
+	void *ptr0 = kmalloc(200);
+	print_flist_head();
+	kfree(ptr0);
+	printf("size at start: %u\n", size_at_start);
+	EXPECT_EQ(head->next, head);
+	EXPECT_EQ(head->size, size_at_start);
+	__kheap_reset();
+}
+
+TEST(LowerBoundaryMerge)
+{
+	header_t *head, *head_next;
+	head = get_flist_head();
+	void *ptr0 = kmalloc(200);
+	void *ptr1 = kmalloc(8000);
+	head_next = head->next;
+	size_t size_at_start = head_next->size;
+	print_flist_head();
+	kfree(ptr0);
+	printf("size at start: %u\n", size_at_start);
+	print_flist_head();
+	EXPECT_NQ(head_next, head->next);
+	//EXPECT_EQ(head->next->size, head
+	__kheap_reset();
 }
 
 END_SUITE();
