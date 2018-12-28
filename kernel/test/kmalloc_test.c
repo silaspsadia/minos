@@ -103,14 +103,19 @@ TEST(FillandEmptyHeap)
 
 TEST(UpperBoundaryMerge)
 {
-	header_t *head = get_flist_head();
-	size_t size_at_start = head->size;
-	void *ptr0 = kmalloc(200);
+	header_t *head, *head_next;
+	head = get_flist_head();
+	void *ptr_mid = kmalloc(200);
+	void *ptr_first = kmalloc(100);
+	void *ptr_next = kmalloc(8000);
+	head_next = head->next;
+	size_t size_at_start = head_next->size;
 	print_flist_head();
-	kfree(ptr0);
+	kfree(ptr_mid);
 	printf("size at start: %u\n", size_at_start);
-	EXPECT_EQ(head->next, head);
-	EXPECT_EQ(head->size, size_at_start);
+	print_flist_head();
+	EXPECT_NQ(head_next, head->next);
+	EXPECT_NQ(head->next->size, size_at_start);
 	__kheap_reset();
 }
 
@@ -118,16 +123,30 @@ TEST(LowerBoundaryMerge)
 {
 	header_t *head, *head_next;
 	head = get_flist_head();
+	void *ptr_mid = kmalloc(200);
+	void *ptr_first = kmalloc(100);
+	void *ptr_next = kmalloc(8000);
+	size_t size_at_start = head->size;
+	print_flist_head();
+	kfree(ptr_first);
+	printf("size at start: %u\n", size_at_start);
+	print_flist_head();
+	EXPECT_NQ(head->size, size_at_start);
+	__kheap_reset();
+}
+TEST(SandwichMerge)
+{
+	// Lower boundary merge should have higher precedence
+	header_t *head, *head_next;
+	head = get_flist_head();
 	void *ptr0 = kmalloc(200);
 	void *ptr1 = kmalloc(8000);
-	head_next = head->next;
-	size_t size_at_start = head_next->size;
+	size_t size_at_start = head->size;
 	print_flist_head();
 	kfree(ptr0);
 	printf("size at start: %u\n", size_at_start);
 	print_flist_head();
-	EXPECT_NQ(head_next, head->next);
-	//EXPECT_EQ(head->next->size, head
+	EXPECT_NQ(head->size, size_at_start);
 	__kheap_reset();
 }
 
