@@ -73,7 +73,6 @@ void kfree(void *ap)
 		if ((p < bp && p_next > bp) || (p->next == _flist_head))
 			break;
 
-	printf("[p|bp|p_next]: [%x|%x|%x]\n", p, bp, p_next);
 	bp->prev = p;
 	bp->next = p_next;
 	p_next->prev = bp;
@@ -109,7 +108,6 @@ void *acquire_more_heap(size_t nunits)
 
 	p = (header_t *) wilderness;
 	p->size = nbytes / sizeof(header_t);
-	printf("%i\n", p->size);
 	p->prev = _flist_head->prev;
 	p->next = _flist_head;
 	_flist_head->prev->next = p;
