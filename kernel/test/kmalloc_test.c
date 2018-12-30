@@ -2,7 +2,7 @@
 #include <test/kmalloc_test.h>
 #include <test/unit.h>
 
-NEW_TEST_SUITE(kmallocTest, 11);
+NEW_TEST_SUITE(kmallocTest, 12);
 
 TEST(ExpectKmalloc0ByteRequestNull)
 {
@@ -147,6 +147,8 @@ TEST(SandwichMerge)
 	EXPECT_EQ(head->size, size_at_start + 18);
 	__kheap_reset();
 }
+
+__kheap_reset();
 
 END_SUITE();
 
