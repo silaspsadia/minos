@@ -23,5 +23,5 @@ typedef struct kobj_cache {
 kobj_cache_t	*kobj_cache_create(size_t);
 kobj_ctl_t	*kobj_alloc(kobj_cache_t *);
 int		kobj_free(kobj_ctl_t *, kobj_cache_t *);
-
+int		__kobj_cache_count(kobj_cache_t *);
 #endif  // LIBKERN_KOBJ_CACHE_H

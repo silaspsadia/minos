@@ -22,6 +22,7 @@ kobj_cache_t *kobj_cache_create(size_t size)
 	((kobj_cache_t *)kobj_cache_addr)->size_obj = size;
 	
 	kobj_ctl_arr = (kobj_ctl_t *)alloc_blocks(div_ceil(num_obj * sizeof(kobj_ctl_t), PHYS_BLOCK_SIZE));
+	((kobj_cache_t *)kobj_cache_addr)->kobj_ctl_list = kobj_ctl_arr;
 	
 	for (i = 0; i < num_obj - 1; i++) {
 		kobj_ctl_arr[i].next = &(kobj_ctl_arr[i+1]);
@@ -40,6 +41,7 @@ kobj_ctl_t *kobj_alloc(kobj_cache_t *cache)
 	if (cache->kobj_ctl_list) {
 		ret = cache->kobj_ctl_list;
 		cache->kobj_ctl_list = cache->kobj_ctl_list->next;
+		ret->next = NULL;
 		return ret;
 	}
 	return NULL;
@@ -56,6 +58,20 @@ int kobj_free(kobj_ctl_t *kobj_ctl, kobj_cache_t *cache)
 	}
 	while (cur->next != NULL)
 		cur = cur->next;
-	cur->next - kobj_ctl;
+	cur->next = kobj_ctl;
 	return 0;
+}
+
+int __kobj_cache_count(kobj_cache_t *cache)
+{
+	kobj_ctl_t	*cur;
+	int		i;
+
+	i = 0;
+	cur = cache->kobj_ctl_list;
+	while (cur != NULL) {
+		i++;
+		cur = cur->next;
+	}
+	return i;
 }
