@@ -13,6 +13,7 @@
 #include <libkern/tst.h>
 #include <test/macros_test.h>
 #include <test/kmalloc_test.h>
+#include <test/kobj_cache_test.h>
 #include <test/phys_mem_test.h>
 
 // TODO: handle TEST symbol better
@@ -36,17 +37,12 @@ void kernel_init(struct multiboot_info *mb)
 	kheap_init();
 	kb_init();
 	timer_init();
-	struct foo {
-		int i;
-		int j;
-		int k;
-	};
-	kobj_cache_create(sizeof(struct foo));
 #ifdef TEST
 	macros_test();
 	kmalloc_test();
 	phys_mem_test();
-	//virt_mem_test();
+	virt_mem_test();
+	kobj_cache_test();
 #endif
 	asm(" sti ");
 }

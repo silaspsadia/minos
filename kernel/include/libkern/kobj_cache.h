@@ -17,9 +17,11 @@ typedef struct kobj_cache {
 	size_t num_obj;
 	size_t size_obj;
 	kobj_ctl_t *kobj_ctl_list;
-	struct kobj_cache *next_cache;
+	struct kobj_cache *kobj_cache_list_next;
 } kobj_cache_t;
 
-kobj_cache_t *kobj_cache_create(size_t);
+kobj_cache_t	*kobj_cache_create(size_t);
+kobj_ctl_t	*kobj_alloc(kobj_cache_t *);
+int		kobj_free(kobj_ctl_t *, kobj_cache_t *);
 
 #endif  // LIBKERN_KOBJ_CACHE_H
