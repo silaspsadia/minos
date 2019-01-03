@@ -105,6 +105,7 @@ bool is_alloced(physical_addr addr)
 
 physical_addr alloc_blocks(uint32_t count)
 {
+	printf("used blocks: %i\n", used_blocks_);
 	if (total_blocks_ - used_blocks_ <= 0)
 		return 0;
 
@@ -117,6 +118,7 @@ physical_addr alloc_blocks(uint32_t count)
 
 	uint32_t addr = free_block * PHYS_BLOCK_SIZE;
 	used_blocks_ += count;
+	printf("used blocks: %i\n", used_blocks_);
 	return addr;
 }
 

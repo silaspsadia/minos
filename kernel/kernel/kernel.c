@@ -9,6 +9,7 @@
 #include <libkern/heap.h>
 #include <libkern/phys_mem.h>
 #include <libkern/virt_mem.h>
+#include <libkern/kobj_cache.h>
 #include <libkern/tst.h>
 #include <test/macros_test.h>
 #include <test/kmalloc_test.h>
@@ -35,11 +36,17 @@ void kernel_init(struct multiboot_info *mb)
 	kheap_init();
 	kb_init();
 	timer_init();
+	struct foo {
+		int i;
+		int j;
+		int k;
+	};
+	kobj_cache_create(sizeof(struct foo));
 #ifdef TEST
 	macros_test();
 	kmalloc_test();
 	phys_mem_test();
-	virt_mem_test();
+	//virt_mem_test();
 #endif
 	asm(" sti ");
 }

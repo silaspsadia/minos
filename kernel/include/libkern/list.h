@@ -45,7 +45,7 @@ static inline void list_add_tail(struct list_head *entry, struct list_head *head
 
 static inline void list_del(struct list_head *entry)
 {
-	__list_del_entry*(entry);
+	__list_del_entry(entry);
 	entry->next = 0xFFFFFFFF;
 	entry->prev = 0xFFFFFFFF;
 }

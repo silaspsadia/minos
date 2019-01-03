@@ -54,3 +54,4 @@ inline void flush_tlb_entry(virtual_addr addr)
 }
 
 #endif  // LIBKERN_VIRT_MEM_H
+
