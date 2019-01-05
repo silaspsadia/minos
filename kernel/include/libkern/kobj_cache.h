@@ -16,6 +16,8 @@ typedef struct kobj_ctl {
 typedef struct kobj_cache {
 	size_t num_obj;
 	size_t size_obj;
+	size_t num_ctl_blocks;
+	size_t num_obj_blocks;
 	kobj_ctl_t *kobj_ctl_list;
 	struct kobj_cache *kobj_cache_list_next;
 } kobj_cache_t;
