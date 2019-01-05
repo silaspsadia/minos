@@ -5,6 +5,7 @@
 
 kobj_cache_t *kobj_cache_create(size_t size)
 {
+	kobj_cache_t    *cache;
 	physical_addr	kobj_cache_addr;
 	kobj_ctl_t	*kobj_ctl_arr;
 	int 			i, num_blocks, num_obj, tot_size;
@@ -18,11 +19,14 @@ kobj_cache_t *kobj_cache_create(size_t size)
 	kobj_cache_addr = alloc_blocks(num_blocks);
 	num_obj = div_ceil(tot_size, size);
 
-	((kobj_cache_t *)kobj_cache_addr)->num_obj = num_obj;
-	((kobj_cache_t *)kobj_cache_addr)->size_obj = size;
+	cache = (kobj_cache_t *)kobj_cache_addr;
+	cache->num_obj = num_obj;
+	cache->size_obj = size;
+	cache->num_ctl_blocks = div_ceil(num_obj * sizeof(kobj_ctl_t), PHYS_BLOCK_SIZE);
+	cache->num_obj_blocks = num_blocks;
 	
-	kobj_ctl_arr = (kobj_ctl_t *)alloc_blocks(div_ceil(num_obj * sizeof(kobj_ctl_t), PHYS_BLOCK_SIZE));
-	((kobj_cache_t *)kobj_cache_addr)->kobj_ctl_list = kobj_ctl_arr;
+	kobj_ctl_arr = (kobj_ctl_t *)alloc_blocks(cache->num_ctl_blocks);
+	cache->kobj_ctl_list = kobj_ctl_arr;
 	
 	for (i = 0; i < num_obj - 1; i++) {
 		kobj_ctl_arr[i].next = &(kobj_ctl_arr[i+1]);
@@ -74,4 +78,10 @@ int __kobj_cache_count(kobj_cache_t *cache)
 		cur = cur->next;
 	}
 	return i;
+}
+
+int __kobj_cache_destroy(kobj_cache_t *cache) {
+	// have to explicitly free both b/c ctl array may not be adjacent
+	free_blocks((physical_addr)cache->kobj_ctl_list, num_ctl_blocks);
+	free_blocks((physical_addr)cache, num_obj_blocks);
 }
