@@ -82,6 +82,6 @@ int __kobj_cache_count(kobj_cache_t *cache)
 
 int __kobj_cache_destroy(kobj_cache_t *cache) {
 	// have to explicitly free both b/c ctl array may not be adjacent
-	free_blocks((physical_addr)cache->kobj_ctl_list, num_ctl_blocks);
-	free_blocks((physical_addr)cache, num_obj_blocks);
+	free_blocks((physical_addr)cache->kobj_ctl_list, cache->num_ctl_blocks);
+	free_blocks((physical_addr)cache, cache->num_obj_blocks);
 }

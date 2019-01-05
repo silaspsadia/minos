@@ -2,7 +2,7 @@
 #include <test/kobj_cache_test.h>
 #include <test/unit.h>
 
-NEW_TEST_SUITE(kobj_cacheTest, 3);
+NEW_TEST_SUITE(kobj_cacheTest, 4);
 
 TEST(KobjCacheCreate)
 {
@@ -44,8 +44,7 @@ TEST(KobjAlloc)
 	int		before, after_alloc;
 	kobj_cache_t	*cache0;
 	kobj_ctl_t	*kobj_ctl0;
-	kobj_ctl_t	*kobj_ctl_cur;
-	
+
 	cache0 = kobj_cache_create(sizeof(struct cat));
 	before = __kobj_cache_count(cache0);
 	kobj_ctl0 = kobj_alloc(cache0);
@@ -62,7 +61,6 @@ TEST(KobjFree)
 	int		before, after_free;
 	kobj_cache_t	*cache0;
 	kobj_ctl_t	*kobj_ctl0;
-	kobj_ctl_t	*kobj_ctl_cur;
 	
 	cache0 = kobj_cache_create(sizeof(struct dog));
 	before = __kobj_cache_count(cache0);
