@@ -16,7 +16,10 @@ static const uint8_t FB_LOW_BYTE_COMMAND = 15;
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
-#define  VGA_WIDTH_CENTER 39
+#define VGA_WIDTH_CENTER 39
+
+//TODO: make putting debug symbols smartyer
+#define COM1_DEBUG
 
 static uint16_t* const VGA_MEMORY = (uint16_t*) 0xB8000;
 
@@ -67,7 +70,9 @@ void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y)
 
 void terminal_putchar(char c)
 {
+#ifdef COM1_DEBUG
 	serial_putchar(c);
+#endif
 	// Logical characters shouldn't be rendered, but processed instead
 	line_fill[terminal_row] = terminal_column;
 	switch (c) {
