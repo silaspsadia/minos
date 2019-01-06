@@ -29,7 +29,7 @@ kobj_cache_t *kobj_cache_create(size_t size)
 	cache->kobj_ctl_list = kobj_ctl_arr;
 	
 	for (i = 0; i < num_obj - 1; i++) {
-		kobj_ctl_arr[i].next = &(kobj_ctl_arr[i+1]);
+		kobj_ctl_arr[i].next = &kobj_ctl_arr[i+1];
 		kobj_ctl_arr[i].kobj_loc = kobj_cache_addr + sizeof(kobj_cache_t) + (size * i);
 	}
 	kobj_ctl_arr[num_obj - 1].next = NULL;	

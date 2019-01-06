@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <extern/multiboot.h>
+#include <kernel/serial_log.h>
 #include <kernel/tty.h>
 #include <arch/i386/io.h>
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
 #include <arch/i386/kb.h>
+#include <arch/i386/serial.h>
 #include <arch/i386/timer.h>
 #include <libkern/heap.h>
 #include <libkern/phys_mem.h>

@@ -14,4 +14,4 @@ void terminal_writestring(const char* data);
 void terminal_centerwrite(const char* data);
 void terminal_colorprint(const char* data, uint8_t fg);
 
-#endif
+#endif /* _KERNEL_TTY_H */
