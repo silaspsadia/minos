@@ -5,8 +5,9 @@
 
 #include <kernel/tty.h>
 
-#include <arch/i386/vga.h>
 #include <arch/i386/io.h>
+#include <arch/i386/serial.h>
+#include <arch/i386/vga.h>
 
 static const uint16_t FB_COMMAND_PORT = 0x3D4;
 static const uint16_t FB_DATA_PORT = 0x3D5;
@@ -66,6 +67,7 @@ void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y)
 
 void terminal_putchar(char c)
 {
+	serial_putchar(c);
 	// Logical characters shouldn't be rendered, but processed instead
 	line_fill[terminal_row] = terminal_column;
 	switch (c) {
