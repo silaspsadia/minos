@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <kernel/tty.h>
 #include <arch/i386/io.h>
 #include <arch/i386/serial.h>
 
@@ -7,7 +8,7 @@
 #define COM3 0x3E8 
 #define COM4 0x2E8
 
-void init_serial(void)
+void serial_init(void)
 {
 	outb(COM1 + 1, 0x00);    // Disable all interrupts
 	outb(COM1 + 3, 0x80);    // Enable DLAB (set baud rate divisor)
@@ -16,6 +17,7 @@ void init_serial(void)
 	outb(COM1 + 3, 0x03);    // 8 bits, no parity, one stop bit
 	outb(COM1 + 2, 0xC7);    // Enable FIFO, clear them, with 14-byte threshold
 	outb(COM1 + 4, 0x0B);    // IRQs enabled, RTS/DSR set
+	terminal_writestring("[Init] Serial ports ready for writing to.\n");
 }
 
 int is_transmit_empty(void)

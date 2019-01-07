@@ -32,6 +32,7 @@ void kernel_init(struct multiboot_info *mb)
 {
 	terminal_initialize();
 	kernel_welcome();
+	serial_init();
 	gdt_init();
 	idt_init();
 	phys_memory_init(mb);
